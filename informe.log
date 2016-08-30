@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.12.22)  30 AUG 2016 18:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.12.22)  30 AUG 2016 19:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -308,7 +308,10 @@ Cargando package 'caratula' v0.5 (2013/08/04)
 \c@coDirectoresCount=\count92
 \codirecTabNombre=\toks25
 \codirecTabEmail=\toks26
-) (./informe.aux)
+) (./informe.aux
+LaTeX Info: Redefining \. on input line 6.
+LaTeX Info: Redefining \% on input line 6.
+)
 \openout1 = `informe.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 7.
@@ -390,52 +393,52 @@ e
 <logo_dc.jpg, id=1, 215.6055pt x 83.5923pt>
 File: logo_dc.jpg Graphic file (type jpg)
  <use logo_dc.jpg>
-Package pdftex.def Info: logo_dc.jpg used on input line 21.
+Package pdftex.def Info: logo_dc.jpg used on input line 22.
 (pdftex.def)             Requested size: 215.60497pt x 83.59207pt.
 
-Overfull \hbox (2.03008pt too wide) in paragraph at lines 21--21
+Overfull \hbox (2.03008pt too wide) in paragraph at lines 22--22
 \OT1/cmr/bx/n/20.74 TP1 - Com-por-ta-mien-tos Reac-ti-vos
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--21
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
 
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 21.
+(Font)              <7> on input line 22.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 21.
+(Font)              <5> on input line 22.
 <logo_uba.jpg, id=2, 225.4824pt x 231.7458pt>
 File: logo_uba.jpg Graphic file (type jpg)
  <use logo_uba.jpg>
-Package pdftex.def Info: logo_uba.jpg used on input line 21.
+Package pdftex.def Info: logo_uba.jpg used on input line 22.
 (pdftex.def)             Requested size: 225.48184pt x 231.74522pt.
 
-Overfull \hbox (35.73079pt too wide) in paragraph at lines 21--21
+Overfull \hbox (35.73079pt too wide) in paragraph at lines 22--22
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 21--21
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
 
  []
 
 [1
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./logo_
-dc.jpg> <./logo_uba.jpg>] (./informe.aux
+dc.jpg> <./logo_uba.jpg>] (./intro.tex) [1] (./informe.aux
 LaTeX Info: Redefining \. on input line 6.
 LaTeX Info: Redefining \% on input line 6.
 ) ) 
 Here is how much of TeX's memory you used:
- 2607 strings out of 493109
- 34998 string characters out of 6135009
+ 2612 strings out of 493109
+ 35056 string characters out of 6135009
  101803 words of memory out of 5000000
- 6052 multiletter control sequences out of 15000+600000
- 5320 words of font info for 20 fonts, out of 8000000 for 9000
+ 6054 multiletter control sequences out of 15000+600000
+ 5925 words of font info for 22 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,8n,30p,305b,384s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,8n,30p,335b,384s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pf
 b></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
@@ -444,10 +447,10 @@ sr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/
 local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/l
 ocal/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/
 local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on informe.pdf (1 page, 403316 bytes).
+Output written on informe.pdf (2 pages, 410858 bytes).
 PDF statistics:
- 42 PDF objects out of 1000 (max. 8388607)
- 28 compressed objects within 1 object stream
+ 45 PDF objects out of 1000 (max. 8388607)
+ 30 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
