@@ -1,1 +1,8 @@
 \section{Introduccion}
+En este trabajo experimentaremos con conceptos de cinematica y tecnicas de control, con el proposito de realizar un seguimiento de trayectoria de un robot mobil utilizando tecnicas de lazo cerrado.
+
+Como primera instancia buscaremos implementar un algoritmo de control que nos permita converger a una pose objetivo. Para ello será necesario operar sobre el sistema de coordenas para restablecerlo de manera adecuada.
+
+Luego experimentaremos con otro tipo de seguimento de trayectoria que imponga una restriccion temporal al robot. Por dar un ejemplo, se le pedirá que luego de 4 segundos de ser iniciado se encuentre en la pocición $(2,4)$ con orientación $30º$, a los $7$ segundos que se encuentre en la pocición $(5,8)$ con orientación $70º$, etc.
+
+Por ultimo implementaremos y experimentaremos con un algoritmo de seguimiento de persecución. La idea de los mismos es que cuando el robot converja a la pose deseada, se la cambiaremos por otra mas distante, con con el objetivo de suavizar la trayectoria.
