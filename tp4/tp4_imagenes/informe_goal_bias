@@ -1,0 +1,45 @@
+En cuanto a la experimentación sobre el goal bias llegamos a la conclusión de que valores muy altos y muy bajos hacen que no siempre se logre conseguir una trayectoria válida hacia destino.
+
+Comenzamos mostrando un escenario con goal bias "alto" de $0.8$, recordemos que esto nos dice que el $80_%$ de las configuraciones aleatorias van a caer en el area "cercana" al goal que definimos.
+
+En la escena: rrt_pioneer_planning el árbol resultante fue el siguiente:
+
+
+%%informe_goal_bias_0.8
+
+Si bien consideró un par de caminos que no lo llevaba al goal, la trayectoria es bastante directa y no se obtuvo un arbol muy ramificado. La elección del goal bias puede considerarse acertada para este escenario.
+
+%%informe_goal_bias_0.8_rviz x3
+
+Podemos ver en rviz que las poses finales son bastante cercanas a la del goal
+
+A medida que disminuimos este valor el arbol comienza a "randomizarse", como caso extremo mostramos lo que sucede con goal_bias 0.1, el arbol que se obtiene es este:
+
+%%informe_goal_bias_0.1
+
+La gran diferencia de este caso con el anterior es el nivel de exploración sobre el mapa. Al tener casi todos los puntos aleatorizados en cualquier posición (cercana o lejana al goal), los posibles caminos no están lo suficientemente sesgados para que se dirija al goal. Si bien algunos de los subcaminos se acercan nunca es lo suficiente a una pose (con enfasis en la orientación) parecida a la del destino.
+
+
+Para otros escenarios el comportamiento no es necesariamente similar, ya vimos que un goal_bias bajo no nos daba buenos resultados, pero si mantenemos el $0.8$ anterior ya no encuentra el trayecto
+ 
+%%informe_goal_bias_0.8_dificil
+
+Lo que está pasando en este caso es que al tener muchos más obstáculos y tan pocos puntos aleatorios fuera del área cercana al goal es mucho mas costoso formar caminos que se alejen de los objetos que causan las colisiones. 
+
+Vale la pena destacar que agregando más iteraciones al algoritmo esto  puede solucionarse (de todas formas no es la solución optima al problema).
+
+Para mejorar esto es conveniente no usar un goal tan cercano a 1, bajandolo a 0.6 logra mitigarse el problema anterior y se llega a destino.
+
+%%informe_goal_bias_0.6_dificil
+
+Los resultados son claros ya que hay poca diferencia entre los caminos que considera respecto al caso anterior, pero al elegir más configuraciones mejor distribuidas en el mapa sale de las zonas de colisiones y finalmente logra dirigirse al goal.
+
+%%informe_goal_bias_0.6_dificil_rviz x3
+
+La pose final que encuentra no fue tan buena como en el escenario anterior pero sigue siendo una buena aproximación al goal.
+
+Si bien no aporta mucho más a lo discutido anteriormente vale la pena mencionar que el caso con bias muy bajo tampoco es bueno en este escenario
+
+%%informe_goal_bias_0.1_dificil
+
+En esta ocasión se acerco al goal pero ninguno de los caminos le permitió obtener una orientación cercana.
