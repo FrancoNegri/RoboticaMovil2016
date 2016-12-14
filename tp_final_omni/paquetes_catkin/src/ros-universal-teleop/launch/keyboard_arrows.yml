@@ -1,0 +1,2 @@
+keys: {start: 113, stop: 119, land: 101, override: 32, train: 116, navigate: 110, reference: 107}
+key_axes: {pitch+: 119, pitch-: 115, yaw+: 97, yaw-: 100}

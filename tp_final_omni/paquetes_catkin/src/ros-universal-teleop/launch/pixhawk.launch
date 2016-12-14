@@ -1,0 +1,7 @@
+<launch>
+  <include file="$(find launchers)/launch/mavros/real.launch"/>
+
+  <node name="rc_teleop" pkg="universal_teleop" type="rc_teleop" output="screen">
+    <param name="z_dz" value="0.2"/>
+  </node>
+</launch>

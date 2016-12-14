@@ -1,0 +1,10 @@
+<launch>
+  <node name="joy" pkg="joy" type="joy_node"/>
+  <node name="keyboard" pkg="keyboard" type="keyboard"/>
+
+  <include file="$(find scorbot)/launch/scorbot.launch"/>
+
+  <node name="universal_teleop" pkg="universal_teleop" type="universal_teleop" output="screen">
+    <rosparam file="$(find universal_teleop)/launch/scorbot_input_map.yml"/>
+  </node>
+</launch>

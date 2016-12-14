@@ -1,0 +1,10 @@
+<launch>
+  <include file="$(find launchers)/launch/mavros/native_sitl.launch"/>
+
+  <node name="rc_teleop" pkg="universal_teleop" type="rc_teleop" output="screen">
+	<remap from="/rc_teleop/cmd_vel" to="/mavros/setpoint_velocity/cmd_vel"/>
+	<!--<param name="max_xy_vel" value="2"/>
+	<param name="max_r_vel" value="1.5"/>-->
+  </node>
+  
+</launch>

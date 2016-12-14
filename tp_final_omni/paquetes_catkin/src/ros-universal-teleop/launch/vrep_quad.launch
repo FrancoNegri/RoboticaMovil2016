@@ -1,0 +1,18 @@
+<launch>
+  <node name="joy" pkg="joy" type="joy_node"/>
+  <node name="keyboard" pkg="keyboard" type="keyboard"/> 
+
+  <node name="universal_teleop" pkg="universal_teleop" type="universal_teleop" output="screen">
+    <rosparam file="$(find universal_teleop)/launch/joy_speedlink.yml"/>
+    <!--<rosparam file="$(find universal_teleop)/launch/joy_noganet.yml"/>-->
+
+    <rosparam file="$(find universal_teleop)/launch/keyboard.yml"/>
+    <rosparam file="$(find universal_teleop)/launch/vrep_quad_scales.yml"/>
+
+    <remap from="/teleop/cmd_vel" to="/robot/cmd_vel"/>
+    <remap from="/robot/cmd_vel" to="/robot/twist"/>
+    <remap from="/robot/takeoff" to="/ardrone/takeoff"/>
+    <remap from="/robot/land" to="/ardrone/land"/>
+    <remap from="/robot/reset" to="/ardrone/reset"/>-->
+  </node>
+</launch>

@@ -1,0 +1,4 @@
+joy_axes: {pitch: 1, roll: 0, yaw: 3, vertical: 2}
+joy_buttons: {override: 6, start: 12, stop: 10, takeoff: 1, land: 2}
+#keys: {start: 113, stop: 119, land: 101, override: 32}
+scales: { roll: 0.2, pitch: 0.2, yaw: 0.3, vertical: 0.3}

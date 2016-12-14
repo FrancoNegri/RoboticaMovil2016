@@ -1,0 +1,19 @@
+<launch>
+  <include file="$(find universal_teleop)/launch/ardrone-settings.xml"/>
+  <node name="joy" pkg="joy" type="joy_node"/>
+  <node name="keyboard" pkg="keyboard" type="keyboard"/> 
+
+  <node name="universal_teleop" pkg="universal_teleop" type="universal_teleop" output="screen">
+    <rosparam file="$(find universal_teleop)/launch/joy_speedlink.yml"/>
+    <!--<rosparam file="$(find universal_teleop)/launch/joy_noganet.yml"/>-->
+
+    <rosparam file="$(find universal_teleop)/launch/keyboard.yml"/>
+    <rosparam file="$(find universal_teleop)/launch/ardrone_scales.yml"/>
+
+
+    <!--<remap from="/robot/cmd_vel" to="/cmd_vel"/>
+    <remap from="/robot/takeoff" to="/ardrone/takeoff"/>
+    <remap from="/robot/land" to="/ardrone/land"/>
+    <remap from="/robot/reset" to="/ardrone/reset"/>-->
+  </node>
+</launch>

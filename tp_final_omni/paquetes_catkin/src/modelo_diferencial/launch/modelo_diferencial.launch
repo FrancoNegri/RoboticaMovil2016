@@ -1,0 +1,12 @@
+<launch>
+
+  <!-- get clock from vrep simulation -->
+  <param name="use_sim_time" value="true"/>
+  <node pkg="vrep_util" type="clock_publisher" name="vrep_clock" output="screen" />
+
+  <!-- teleop -->
+  <include file="$(find universal_teleop)/launch/vrep_pioneer_irm.launch" />
+
+  <node pkg="modelo_diferencial" type="pioneer_odometry" name="pioneer_odometry" output="screen" />
+
+</launch>
