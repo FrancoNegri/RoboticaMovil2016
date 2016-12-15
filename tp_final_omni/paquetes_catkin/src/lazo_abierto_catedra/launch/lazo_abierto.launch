@@ -1,0 +1,18 @@
+<launch>
+
+  <!-- get clock from vrep simulation -->
+  <param name="use_sim_time" value="true"/>
+  <node pkg="vrep_util" type="clock_publisher" name="vrep_clock" output="screen" />
+
+  <node pkg="modelo_diferencial" type="pioneer_odometry" name="pioneer_odometry" output="screen" />
+
+  <node pkg="lazo_abierto" type="trajectory_follower" name="trajectory_follower" output="screen" />
+  
+  <node pkg="lazo_abierto" type="trajectory_generator" name="trajectory_generator" output="screen" >
+    <param name="stepping" type="double" value="0.1"/>
+    <param name="total_time" type="double" value="50"/>
+    <param name="amplitude" type="double" value="1"/>
+    <param name="cycles" type="double" value="1"/>
+  </node>
+
+</launch>

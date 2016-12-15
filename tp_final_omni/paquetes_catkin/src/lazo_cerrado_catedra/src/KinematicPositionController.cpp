@@ -31,7 +31,7 @@ KinematicPositionController::KinematicPositionController(ros::NodeHandle& nh) :
  * - K_RHO < K_ALPHA
  * - K_BETA < 0
  */
-#define K_RHO 0.4
+#define K_RHO 0.05
 #define K_ALPHA 0.7
 #define K_BETA -0.1
 
@@ -61,9 +61,11 @@ bool KinematicPositionController::control(const ros::Time& t, double& vx, double
   // compute position differences with expected pose.
   
   //Poner tope y buscar una buena constante.
-  double dx = goal_x - current_x;
-  double dy = goal_y - current_y;
-  double theta =  goal_a - current_a;
+  double dx = current_x - goal_x;
+  double dy = current_y - goal_y;
+  double theta = current_a - goal_a;
+
+  std::cout << dx << " " << dy << " " << theta << std::endl;
 
   //Desroto el vector de velocidad (que estaq con respecto al mapa) y lo pongo con respecto al robot
 
@@ -71,12 +73,13 @@ bool KinematicPositionController::control(const ros::Time& t, double& vx, double
   double dy_rot = sin(-theta) * dx + cos(-theta) * dy;
 
   // use the control law to compute velocity commands.
+  std::cout << dx_rot << dy_rot << theta << std::endl;
   
-  vx = dx_rot;
-  vy = dy_rot;
-  tita = theta;
+  vx = K_RHO * dx_rot;
+  vy = K_RHO * dy_rot;
+  tita = K_RHO * theta;
 
-  ROS_INFO_STREAM(" theta siegwart: " << theta << " expected_atheta: "  << current_a);
+  ROS_INFO_STREAM(" theta: " << current_a << " expected_atheta: "  << goal_a << " current_x: " << current_x << " expected x:" << goal_x << " current_y: " << current_y << " expected y: " << goal_y);
 
   return true;
 }

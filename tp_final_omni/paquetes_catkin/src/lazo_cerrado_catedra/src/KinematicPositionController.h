@@ -14,7 +14,7 @@ class KinematicPositionController : public TrajectoryFollower
     
     KinematicPositionController(ros::NodeHandle& nh);
 
-    bool control(const ros::Time& t, double& v, double& w);
+    bool control(const ros::Time& t, double& v, double& w, double &tita);
 
   private:
 
