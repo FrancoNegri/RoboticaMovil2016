@@ -115,10 +115,11 @@ void PioneerOdometry::on_encoder_ticks(const robmovil_msgs::MultiEncoderTicks& e
   msg.header.frame_id = "odom";
   msg.child_frame_id = "base_link";
 
-  x_ += velocidad_lineal_x * delta_t;
-  y_ += velocidad_lineal_y * delta_t;
   theta_ += velocidad_angular * delta_t;
+  x_ += velocidad_lineal_x * delta_t * cos(theta_) - velocidad_lineal_y * delta_t * sin(theta_) ;
+  y_ += velocidad_lineal_x * delta_t * sin(theta_) + velocidad_lineal_y * delta_t * cos(theta_);
 
+  
   msg.pose.pose.position.x = x_ ;
   msg.pose.pose.position.y = y_ ;
   msg.pose.pose.position.z = 0;

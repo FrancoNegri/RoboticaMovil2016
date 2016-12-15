@@ -31,9 +31,7 @@ KinematicPositionController::KinematicPositionController(ros::NodeHandle& nh) :
  * - K_RHO < K_ALPHA
  * - K_BETA < 0
  */
-#define K_RHO 0.05
-#define K_ALPHA 0.7
-#define K_BETA -0.1
+#define K_RHO 0.1
 
 double lineal_interp(const ros::Time& t0, const ros::Time& t1, double y0, double y1, const ros::Time& t)
 {
@@ -61,9 +59,9 @@ bool KinematicPositionController::control(const ros::Time& t, double& vx, double
   // compute position differences with expected pose.
   
   //Poner tope y buscar una buena constante.
-  double dx = current_x - goal_x;
-  double dy = current_y - goal_y;
-  double theta = current_a - goal_a;
+  double dx = goal_x - current_x;
+  double dy = goal_y - current_y;
+  double theta = goal_a - current_a;
 
   std::cout << dx << " " << dy << " " << theta << std::endl;
 
