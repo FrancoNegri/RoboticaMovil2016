@@ -16,9 +16,9 @@
   <node pkg="lazo_cerrado_catedra" type="trajectory_follower" name="trajectory_follower" output="screen" >
     <param name="goal_selection" type="str" value="FIXED_GOAL"/>
     
-    <param name="fixed_goal_x" type="double" value="0"/>
-    <param name="fixed_goal_y" type="double" value="1"/>
-    <param name="fixed_goal_a" type="double" value="-1.570796327"/> <!-- -3/2 * PI -->
+    <param name="fixed_goal_x" type="double" value="-2"/>
+    <param name="fixed_goal_y" type="double" value="2.5"/>
+    <param name="fixed_goal_a" type="double" value="1.570796327"/> <!-- -3/2 * PI -->
   </node>
 
   <node pkg="lazo_cerrado_catedra" type="logger" name="logger" output="screen" />
