@@ -9,7 +9,7 @@
 robmovil_ekf::LandmarkDetector::LandmarkDetector(ros::NodeHandle& _n) :
     n(_n), transform_received(false)
 {
-  laser_sub = n.subscribe("/scan", 1, &LandmarkDetector::on_laser_scan, this);
+  laser_sub = n.subscribe("/robot/front_laser/scan", 1, &LandmarkDetector::on_laser_scan, this);
   landmark_pub = n.advertise<robmovil_msgs::LandmarkArray>("/landmarks", 1);
   pointcloud_pub = n.advertise<sensor_msgs::PointCloud>("/landmarks_pointcloud", 1);
 
@@ -111,11 +111,11 @@ void robmovil_ekf::LandmarkDetector::on_laser_scan(const sensor_msgs::LaserScanC
 
 bool robmovil_ekf::LandmarkDetector::update_laser_tf(const ros::Time& required_time)
 {
-  if (!listener->waitForTransform(laser_frame, robot_frame, required_time, ros::Duration(1)))
+  if (!listener->waitForTransform(robot_frame, laser_frame, required_time, ros::Duration(1)))
     return false;
   else
   {
-    listener->lookupTransform(laser_frame, robot_frame, ros::Time(0), laser_transform);
+    listener->lookupTransform(robot_frame, laser_frame, ros::Time(0), laser_transform);
     return true;
   }
 }

@@ -44,7 +44,7 @@ void PioneerOdometry::on_velocity_cmd(const geometry_msgs::Twist& twist)
   double vLeftRear = 1/WHEEL_RADIUS *(linealVelX + linealVelY - (L_X + L_Y)* angularVel);
   double vRightRear = 1/WHEEL_RADIUS *(linealVelX - linealVelY + (L_X + L_Y)* angularVel);
 
-  // publish left velocity
+  //
   {
     std_msgs::Float64 msg;
     msg.data = vRightRear;
@@ -56,7 +56,7 @@ void PioneerOdometry::on_velocity_cmd(const geometry_msgs::Twist& twist)
     msg.data = vLeftRear;
     rear_left_pub.publish( msg );
   }
-  // publish right velocity
+  //
   {
     std_msgs::Float64 msg;
     msg.data = vRightFront;
@@ -125,7 +125,12 @@ void PioneerOdometry::on_encoder_ticks(const robmovil_msgs::MultiEncoderTicks& e
   msg.pose.pose.position.z = 0;
 
   msg.pose.pose.orientation = tf::createQuaternionMsgFromYaw(theta_);
-
+	
+  msg.twist.twist.linear.x = velocidad_lineal_x;
+  msg.twist.twist.linear.y = velocidad_lineal_y;
+  
+  msg.twist.twist.angular.z = velocidad_angular;
+  
   pub_odometry_.publish( msg );
 
   // Actualizo las variables de estado
@@ -135,6 +140,8 @@ void PioneerOdometry::on_encoder_ticks(const robmovil_msgs::MultiEncoderTicks& e
   last_ticks_left_rear = encoder.ticks[2].data;
   last_ticks_right_rear = encoder.ticks[3].data;
 
+  last_ticks_time = encoder.header.stamp;
+  
   /* Mando tambien un transform usando TF */
   tf::Transform t;
   tf::poseMsgToTF(msg.pose.pose, t);

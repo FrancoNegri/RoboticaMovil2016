@@ -3,6 +3,7 @@
 
 #include <ros/ros.h>
 #include <robmovil_msgs/LandmarkArray.h>
+#include <geometry_msgs/PoseArray.h>
 #include <sensor_msgs/Imu.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
@@ -17,6 +18,7 @@ namespace robmovil_ekf {
     public:
       Localizer(ros::NodeHandle& n);
 
+      void on_posts_init(const geometry_msgs::PoseArray& msg);
       void on_landmark_array(const robmovil_msgs::LandmarkArrayConstPtr& msg);
       void on_imu(const sensor_msgs::ImuConstPtr& msg);
       void on_odometry(const nav_msgs::OdometryConstPtr& msg);
@@ -26,7 +28,7 @@ namespace robmovil_ekf {
       bool set_map;
       bool only_prediction;
       
-      ros::Subscriber landmark_sub, imu_sub, odo_sub;
+      ros::Subscriber landmark_sub, imu_sub, odo_sub, posts_sub;
       ros::Publisher pose_pub;
       std::string base_frame_, map_frame_, laser_frame_;
       

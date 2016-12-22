@@ -53,7 +53,7 @@ namespace robmovil_ekf
       /* modelo de sensado */
       void makeMeasure(void);
       
-      void set_map(const std::vector<Vector>& observations);
+      void set_map(const std::vector<geometry_msgs::Pose>& observations);
       void set_delta_t(double delta); // seconds
       bool set_measure(const Vector& measured_z);
 

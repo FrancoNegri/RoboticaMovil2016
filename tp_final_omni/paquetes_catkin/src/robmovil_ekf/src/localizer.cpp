@@ -3,14 +3,14 @@
 #include "localizer.h"
 
 robmovil_ekf::Localizer::Localizer(ros::NodeHandle& n) :
-  u(2)
+  u(3)
 {
-  u(1) = u(2) = 0;
+  u(1) = u(2) = u(3) = 0;
   set_map = true;
 
   // Get node parameters
   n.param<std::string>("base_link_frame", base_frame_, "base_link_ekf");
-  n.param<std::string>("ekf_frame", map_frame_, "odom");
+  n.param<std::string>("ekf_frame", map_frame_, "map");
   n.param<std::string>("laser_frame", laser_frame_, "laser");
   
   n.param<bool>("only_prediction", only_prediction, false);
@@ -19,8 +19,7 @@ robmovil_ekf::Localizer::Localizer(ros::NodeHandle& n) :
   imu_sub = n.subscribe("/imu", 1, &Localizer::on_imu, this);
   odo_sub = n.subscribe("/robot/odometry", 1, &Localizer::on_odometry, this);
   pose_pub = n.advertise<geometry_msgs::PoseWithCovarianceStamped>("pose", 1);
-  
-//   posts_sub = n.subscribe("/posts", 1, &Localizer::on_posts_init, this);
+  posts_sub = n.subscribe("/posts", 1, &Localizer::on_posts_init, this);
   
   while( (t = ros::Time::now()) == ros::Time(0) ); // se espera por el primer mensaje de 'clock'
 
@@ -60,15 +59,28 @@ void robmovil_ekf::Localizer::prediction(const ros::Time& now)
   ROS_DEBUG_STREAM("Predicted covariance: " << P);
 }
 
-// void robmovil_ekf::Localizer::on_posts_init(const geometry_msgs::PoseArray& msg)
-// {
-//   
-//   for (int i = 0; i < msg->poses.size(); i++)
-//   {
-// 
-//     
-//   }
-// }
+ void robmovil_ekf::Localizer::on_posts_init(const geometry_msgs::PoseArray& msg)
+{
+ if (set_map)
+  {
+    ROS_INFO("Creating map");
+//     std::vector<LocalizerEKF::Vector> map;
+//     for (int i = 0; i < msg->landmarks.size(); i++)
+//     {
+//       LocalizerEKF::Vector z(2);
+//       
+//       z(1) = msg->landmarks[i].range;
+//       z(2) = msg->landmarks[i].bearing;
+//       map.push_back(z);
+//       
+//       ROS_DEBUG_STREAM("Measurement: " << z);
+//     } 
+    std::vector<geometry_msgs::Pose> map = msg.poses;
+    ekf.set_map(map);
+    set_map = false;
+    return;
+  }
+}
 
 
 void robmovil_ekf::Localizer::on_landmark_array(const robmovil_msgs::LandmarkArrayConstPtr& msg)
@@ -81,26 +93,10 @@ void robmovil_ekf::Localizer::on_landmark_array(const robmovil_msgs::LandmarkArr
 
   /* Ante el primer update, tomo las poses de los postes y me las guardo como un mapa
    * Se asume que la pose actual del robot es tomada como origen de la localizacion */
-  
-  
+ 
   if (set_map)
   {
-    ROS_INFO("Creating map");
-    std::vector<LocalizerEKF::Vector> map;
-    for (int i = 0; i < msg->landmarks.size(); i++)
-    {
-      LocalizerEKF::Vector z(2);
-      
-      z(1) = msg->landmarks[i].range;
-      z(2) = msg->landmarks[i].bearing;
-      map.push_back(z);
-      
-      ROS_DEBUG_STREAM("Measurement: " << z);
-    }
-
-    ekf.set_map(map);
-    set_map = false;
-    
+    ROS_DEBUG_STREAM("Map not set!");
     return;
   }
   
@@ -141,15 +137,15 @@ void robmovil_ekf::Localizer::on_landmark_array(const robmovil_msgs::LandmarkArr
 
 void robmovil_ekf::Localizer::on_imu(const sensor_msgs::ImuConstPtr& msg)
 {
-  u(3) = msg->angular_velocity.z;
-  ROS_DEBUG_STREAM("Received angular velocity Z: " << u(3));
 }
 
 void robmovil_ekf::Localizer::on_odometry(const nav_msgs::OdometryConstPtr& msg)
 {
   u(1) = msg->twist.twist.linear.x;
   u(2) = msg->twist.twist.linear.y;
-  ROS_DEBUG_STREAM("Received linear velocity X: " << u(1) << "received linear velocity Y: " << u(2));
+  u(3) = msg->twist.twist.angular.z;
+  ROS_DEBUG_STREAM("Received angular velocity Z: " << u(3));
+  ROS_DEBUG_STREAM("Received linear velocity X: " << u(1) << " received linear velocity Y: " << u(2) );
 }
 
 void robmovil_ekf::Localizer::advance_time(const ros::Time& now)

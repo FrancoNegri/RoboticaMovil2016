@@ -11,9 +11,9 @@ robmovil_ekf::LocalizerEKF::LocalizerEKF(void) : EKFilter(3, 3, 3, 2, 2)
 
   /* estado inicial  CAMBIAR*/
   Vector x0(3);
-  x0(1) = 0;
-  x0(2) = 0;
-  x0(3) = 0;
+  x0(1) = -2;
+  x0(2) = 2;
+  x0(3) = M_PI/2;
 
   /* covarianza inicial */
   Matrix P(3, 3);
@@ -34,15 +34,14 @@ robmovil_ekf::LocalizerEKF::LocalizerEKF(void) : EKFilter(3, 3, 3, 2, 2)
   init(x0, P); /* NOTA: esta llamada utiliza las referencias de x0 y P */
 }
 
-void robmovil_ekf::LocalizerEKF::set_map(const std::vector<LocalizerEKF::Vector>& observations)
+void robmovil_ekf::LocalizerEKF::set_map(const std::vector<geometry_msgs::Pose>& poses)
 {
   /* Nota: Se asume x = 0, el origen de coordenadas del mapa comienza donde el robot esta ahora,
    * los landmarks se guardar en relacion al mapa */
-  for (int i = 0; i < observations.size(); i++)
+  for (int i = 0; i < poses.size(); i++)
   {
-    tf::Point landmark = measure2landmark(observations[i]);
+    tf::Point landmark = tf::Point(poses[i].position.x,poses[i].position.y,0);
     map_landmarks.push_back(landmark);
-    
     ROS_DEBUG_STREAM("Landmark: " << landmark.getX() << "," << landmark.getY() << "," << landmark.getZ());
   }
 }
@@ -102,10 +101,10 @@ void robmovil_ekf::LocalizerEKF::makeA(void)
 
   A(1,1) = 1;
   A(1,2) = 0;
-  A(1,3) = -sin(tita)*delta_dist_x + cos(tita)*delta_dist_y;
+  A(1,3) = -sin(-tita)*delta_dist_x - cos(-tita)*delta_dist_y;
   A(2,1) = 0;
   A(2,2) = 1;
-  A(2,3) = cos(tita)*delta_dist_x - sin(tita)*delta_dist_y;
+  A(2,3) = cos(-tita)*delta_dist_x - sin(-tita)*delta_dist_y;
   A(3,1) = 0;
   A(3,2) = 0;
   A(3,3) = 1;
@@ -187,6 +186,7 @@ void robmovil_ekf::LocalizerEKF::makeH(void)
   // Coordenadas cartesianas del landmark con respecto al robot
   ROS_DEBUG_STREAM("Relative_landmark: " << relative_landmark.getX() << " " << relative_landmark.getY() << " " << relative_landmark.getZ());
 
+  
   if (relative_landmark.length2() < 0.001)
   {
     H(1,1) = H(2,2) = 1;
@@ -196,6 +196,8 @@ void robmovil_ekf::LocalizerEKF::makeH(void)
   } else {
     
     /* COMPLETAR: Calcular H en base al landmark del mapa relativo al robot */
+    
+    std::cout << relative_landmark.distance(tf::Point(0,0,0)) << "lalalal" << std::endl;
     
     H(1,1) = -relative_landmark.getX() / relative_landmark.distance(tf::Point(0,0,0));
     H(1,2) = -relative_landmark.getY() / relative_landmark.distance(tf::Point(0,0,0));
@@ -211,10 +213,10 @@ void robmovil_ekf::LocalizerEKF::makeBaseV(void)
 {
   /* COMPLETAR: Con las derivadas del modelo de sensado con respecto al ruido ADITIVO v */
   
-  V(1,1) = 0;
+  V(1,1) = 1;
   V(1,2) = 0;
   V(2,1) = 0;
-  V(2,2) = 0;
+  V(2,2) = 1;
   
   ROS_DEBUG_STREAM("V: " << std::endl << V);
 }
@@ -246,9 +248,9 @@ void robmovil_ekf::LocalizerEKF::makeProcess(void)
   double delta_dist_y = u(2)*delta_t;
   double tita = x_old(3);
 
-  x(1) = x_old(1) + cos(tita)*delta_dist_x + sin(tita)*delta_dist_y;
-  x(2) = x_old(2) + sin(tita)* delta_dist_x + cos(tita)*delta_dist_y;
-  x(3) = angles::normalize_angle(tita + u(3)*delta_t);
+  x(1) = x_old(1) + cos(tita)* delta_dist_x - sin(tita) * delta_dist_y;
+  x(2) = x_old(2) + sin(tita)* delta_dist_x + cos(tita) * delta_dist_y;
+  x(3) = angles::normalize_angle(tita + u(3) * delta_t);
 
   ROS_DEBUG_STREAM("Process model:" << std::endl << "X_t-1: " << x_old << std::endl << "X_t: " << x << std::endl << "delta_t: " << delta_t);
 }
@@ -356,7 +358,7 @@ robmovil_ekf::LocalizerEKF::Vector robmovil_ekf::LocalizerEKF::landmark2measure(
   transform_world_robot.setRotation(tf::createQuaternionFromYaw(x(3)));
 
   /* COMPLETAR */
-  tf::Point relative_landmark = transform_world_robot*landmark;
+  tf::Point relative_landmark = transform_world_robot.inverse() * landmark;
 
   ROS_DEBUG_STREAM("relative_landmark: " << relative_landmark.getX() << ", " << relative_landmark.getY() << ", " << relative_landmark.getZ());
 
@@ -368,4 +370,5 @@ robmovil_ekf::LocalizerEKF::Vector robmovil_ekf::LocalizerEKF::landmark2measure(
 
 
   return measure;
+  
 }
