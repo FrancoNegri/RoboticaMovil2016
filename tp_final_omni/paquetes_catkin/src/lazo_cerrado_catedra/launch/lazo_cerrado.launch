@@ -8,7 +8,7 @@
   
   <node pkg="lazo_abierto_catedra" type="trajectory_generator" name="trajectory_generator" output="screen" >
     <param name="stepping" type="double" value="0.05"/>
-    <param name="total_time" type="double" value="60"/>
+    <param name="total_time" type="double" value="160"/>
     <param name="amplitude" type="double" value="1"/>
     <param name="cycles" type="double" value="1"/>
   </node>

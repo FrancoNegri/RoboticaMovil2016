@@ -9,9 +9,17 @@
 
   <!-- Run clock publisher-->
   <node pkg="vrep_util" type="clock_publisher" name="clock_publisher" output="screen" />
-
-  <!-- Run keyboard input interface-->
-  <include file="$(find universal_teleop)/launch/vrep_pioneer_irm.launch" />
+  
+  <node pkg="lazo_abierto_catedra" type="trajectory_generator" name="trajectory_generator" output="screen" >
+    <param name="stepping" type="double" value="0.05"/>
+    <param name="total_time" type="double" value="160"/>
+    <param name="amplitude" type="double" value="1"/>
+    <param name="cycles" type="double" value="1"/>
+  </node>
+  
+  <node pkg="lazo_cerrado_catedra" type="trajectory_follower" name="trajectory_follower" output="screen" >
+    <param name="goal_selection" type="str" value="PURSUIT_BASED"/>
+  </node>
 
   <group if="$(arg detector)">
       <node pkg="imu_laser_catedra" type="landmark_detector" name="landmark_detector" output="screen">

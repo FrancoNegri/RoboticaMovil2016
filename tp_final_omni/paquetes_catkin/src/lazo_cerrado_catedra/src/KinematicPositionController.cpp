@@ -31,7 +31,7 @@ KinematicPositionController::KinematicPositionController(ros::NodeHandle& nh) :
  * - K_RHO < K_ALPHA
  * - K_BETA < 0
  */
-#define K_RHO 0.09
+#define K_RHO 0.4
 
 double lineal_interp(const ros::Time& t0, const ros::Time& t1, double y0, double y1, const ros::Time& t)
 {
@@ -61,8 +61,13 @@ bool KinematicPositionController::control(const ros::Time& t, double& vx, double
   //Poner tope y buscar una buena constante.
   double dx = goal_x - current_x;
   double dy = goal_y - current_y;
+  
   double dtheta = goal_a - current_a;
-
+  
+  if((goal_a > 0 && current_a < 0))
+    dtheta = -dtheta;
+  
+  
   std::cout << dx << " " << dy << " " << dtheta << std::endl;
 
   //Desroto el vector de velocidad (que estaq con respecto al mapa) y lo pongo con respecto al robot
@@ -85,7 +90,7 @@ bool KinematicPositionController::control(const ros::Time& t, double& vx, double
 bool KinematicPositionController::getCurrentPose(const ros::Time& t, double& x, double& y, double& a)
 {
   tf2::Transform odom_to_robot;
-  if (not lookupTransformSafe(tfBuffer_, "map", "base_link", t, odom_to_robot))
+  if (not lookupTransformSafe(tfBuffer_, "map", "base_link_ekf", t, odom_to_robot))
     return false;
 
   x = odom_to_robot.getOrigin().getX();
@@ -107,17 +112,17 @@ bool KinematicPositionController::getPursuitBasedGoal(const ros::Time& t, double
    
   const robmovil_msgs::Trajectory& trajectory = getTrajectory();
   
-  // Si nos encontramos "cerca" del final, se establece el ultimo wpoint como goal
-  const robmovil_msgs::TrajectoryPoint& last_wpoint = trajectory.points.back(); 
-  
-  if(dist2(current_x, current_y, last_wpoint.transform.translation.x, last_wpoint.transform.translation.y) <= 0.5)
-  {
-    x = last_wpoint.transform.translation.x;
-    y = last_wpoint.transform.translation.y;
-    a = tf2::getYaw(last_wpoint.transform.rotation);
-    
-    return true;
-  }
+//   // Si nos encontramos "cerca" del final, se establece el ultimo wpoint como goal
+//   const robmovil_msgs::TrajectoryPoint& last_wpoint = trajectory.points.back(); 
+//   
+//   if(dist2(current_x, current_y, last_wpoint.transform.translation.x, last_wpoint.transform.translation.y) <= 0.5)
+//   {
+//     x = last_wpoint.transform.translation.x;
+//     y = last_wpoint.transform.translation.y;
+//     a = tf2::getYaw(last_wpoint.transform.rotation);
+//     
+//     return true;
+//   }
   
   // Se busca el waypoint mas cercano en terminos de x,y
   unsigned int closest_idx = 0;
@@ -151,7 +156,7 @@ bool KinematicPositionController::getPursuitBasedGoal(const ros::Time& t, double
     double point_a = tf2::getYaw(point.transform.rotation);
     
     // Nos quedamos con el primer wpoint que cumpla con la distancia lookahead propuesta
-    if(dist2(current_x,current_y,point_x,point_y) > 0.5){
+    if(dist2(current_x,current_y,point_x,point_y) > 0.1){
       x = point_x;
       y = point_y;
       a = point_a;

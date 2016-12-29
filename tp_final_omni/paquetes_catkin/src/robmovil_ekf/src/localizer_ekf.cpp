@@ -181,7 +181,9 @@ void robmovil_ekf::LocalizerEKF::makeH(void)
   transform_world_robot.setRotation( tf::createQuaternionFromYaw( robot_orientation ) );
 
   /* COMPLETAR: Obtener las coordenadas de correspondence_landmark con respecto al robot */
-  tf::Point relative_landmark =transform_world_robot.inverse()*correspondence_landmark;
+  //tf::Point relative_landmark =transform_world_robot.inverse()*correspondence_landmark;
+  
+  tf::Point relative_landmark = correspondence_landmark - robot_position;
 
   // Coordenadas cartesianas del landmark con respecto al robot
   ROS_DEBUG_STREAM("Relative_landmark: " << relative_landmark.getX() << " " << relative_landmark.getY() << " " << relative_landmark.getZ());
@@ -196,9 +198,7 @@ void robmovil_ekf::LocalizerEKF::makeH(void)
   } else {
     
     /* COMPLETAR: Calcular H en base al landmark del mapa relativo al robot */
-    
-    std::cout << relative_landmark.distance(tf::Point(0,0,0)) << "lalalal" << std::endl;
-    
+  
     H(1,1) = -relative_landmark.getX() / relative_landmark.distance(tf::Point(0,0,0));
     H(1,2) = -relative_landmark.getY() / relative_landmark.distance(tf::Point(0,0,0));
     H(2,1) = relative_landmark.getY() / relative_landmark.distance2(tf::Point(0,0,0));

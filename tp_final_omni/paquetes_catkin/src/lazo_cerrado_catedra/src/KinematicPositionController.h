@@ -49,7 +49,7 @@ class KinematicPositionController : public TrajectoryFollower
     void publishCurrentGoal(const ros::Time& t, const double& goal_x, const double& goal_y, const double& goal_a)
     {
       geometry_msgs::PoseStamped expected_pose;
-      expected_pose.header.frame_id = "odom";
+      expected_pose.header.frame_id = "map";
       expected_pose.header.stamp = t;
       expected_pose.pose.position.x = goal_x;
       expected_pose.pose.position.y = goal_y;
