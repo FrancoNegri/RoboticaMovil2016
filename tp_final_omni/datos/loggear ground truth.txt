@@ -1,0 +1,1 @@
+rostopic echo --filter "m.transforms[0].child_frame_id == 'base_link_gt'"  /tf
