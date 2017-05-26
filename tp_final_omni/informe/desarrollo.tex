@@ -1,0 +1,49 @@
+\subsection{Adaptacion del modelo Cinematico}
+Como ya anticipamos, para este trabajo practico utilizaremos un robot omidireccional. Este cuenta con cuatro ruedas Mecanum dispuestas a los cuatro costados del robot, las cuales cuentan con rodillos especiales que permiten transmitir parte de la fuerza en direccion de un angulo definido.
+%motivacion -> para poder posicionarte
+
+Como primer desafío buscaremos determinar la velocidad de los actuadores y la velocidad en cada uno de los ejes de livertad del robot. Para esto adaptaremos el modelo cinematico visto durante la materia para a este nuevo tipo de actuadores utilizando el paper provisto por la catedra, las formulas de cinematica directa pasarán a ser.
+
+
+$$v_x(t)=(w_1+w_2+w_3+w_4).r/4$$
+$$v_y(t)=(-w_1+w_2+w_3-w_4).r/4$$
+$$w_z(t)=(-w_1+w_2-w_3+w_4).r/(4(l_x+l_y))$$
+
+
+Y las de cinematica inversa:
+
+$$ w_1 = 1/r (v_x - v_y - (l_x + l_y)w_z$$
+$$ w_2 = 1/r (v_x + v_y + (l_x + l_y)w_z$$
+$$ w_3 = 1/r (v_x + v_y - (l_x + l_y)w_z$$
+$$ w_4 = 1/r (v_x - v_y + (l_x + l_y)w_z$$
+
+%se podria hacer una lista.
+Donde $v_x$, $v_y$ y $w_z$ son las velocidades lineares y angular del robot, $r$ el radio de las ruedas (asumiremos que todas las ruedas tienen exactamente el mismo radio), $l_x$ la mita de la distancia entre las dos ruedas delanteras y $l_y$ la mitad de la distancia entre una rueda delantera y una rueda tracera.
+$w_1,w_2,w_3,w_4$ las velocidades angulares de las cuatro ruedas.
+
+En particular para nuestro robot, tomaremos $r =0.05 $ metros, $l_x = l_y = 0.175 $ metros.
+
+\subsubsection{Experimentación}
+
+En este apartado buscaremos validar que el moldeo antes descripto se condice con la realidad. Para ello, enviaremos mensajes a travez de rostopic con comandos de velocidad lineal y esperaremos ver que el modelo sepa traducir y aplicar la velocidad deseada en los actuadores. Luego utilizando los mensajes de cinematica inversa esperamos que el modelo pueda traducir nuevamente las velocidades angulares de los actuadores a las velocidades lineales y que estas se condigan con las que enviamos.
+
+% Plantear experimentos que permitan validar y evaluar la efectividad
+% del modelo. Entre los experimentos a realizar se deben incluir gr ́aficos de consignas de velocidades lineales y angular
+% del robot junto a las correspondientes velocidades reales ejercidas por el robot, para su comparaci ́on. Asimismo, se
+% debe incluir un gr ́
+% afico que permita comparar la pose del robot estimada seg ́
+% un odometr ́ıa con la real informada por el
+% simulador.
+
+\subsection{Adaptación del control a lazo cerrado}
+
+Al igual que para el modelo diferencial queremos que el robot se pueda transladar de una posicion inicial $(x_i,y_i,w_i)$ a una posicion final $(x_f,y_f,w_f)$
+
+
+En este caso, al tener un modelo cinematico holonómico las cuentas se simplifican con respecto al modelo diferencial: Al tener control independiente sobre cada velocidad puedo plantear, para cada dimención por separado:
+
+$$v_x = $x_f$ - $x_i$ / (t_f - t_i)$$
+$$v_y = $y_f$ - $y_i$ / (t_f - t_i)$$
+$$v_x = $w_f$ - $w_i$ / (t_f - t_i)$$
+
+\subsubsection{Experimentación}
