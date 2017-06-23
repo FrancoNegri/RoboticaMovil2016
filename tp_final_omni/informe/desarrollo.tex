@@ -42,8 +42,49 @@ Al igual que para el modelo diferencial queremos que el robot se pueda translada
 
 En este caso, al tener un modelo cinematico holonómico las cuentas se simplifican con respecto al modelo diferencial: Al tener control independiente sobre cada velocidad puedo plantear, para cada dimención por separado:
 
-$$v_x = $x_f$ - $x_i$ / (t_f - t_i)$$
-$$v_y = $y_f$ - $y_i$ / (t_f - t_i)$$
-$$v_x = $w_f$ - $w_i$ / (t_f - t_i)$$
+$$v_x = x_f - x_i / (t_f - t_i)$$
+$$v_y = y_f - y_i / (t_f - t_i)$$
+$$v_x = w_f - w_i / (t_f - t_i)$$
 
 \subsubsection{Experimentación}
+
+
+\subsection{Modelado de EKF}
+En el caso de un robot omidireccional, lo que cambia respecto al modelo diferencial usado previamente es que aumentan los grados de libertad posibles en la translación. Ahora es posible que el robot se mueva tanto en $x$ como en $y$ y $\theta$.
+
+Por este motivo, el vector $\overrightarrow{u}$ que representa las entradas de contro cambia de la siguiente manera:
+
+$$\overrightarrow{u} = \begin{bmatrix}
+         Vx \\
+         Vy \\
+         w 
+        \end{bmatrix}$$
+
+
+El modeo de estado $\overrightarrow{x}$ se mantiene, ya que el robot permanece igual a la del modelo anterior:
+
+$$\overrightarrow{x} = \begin{bmatrix}
+         x \\
+         y \\
+         \theta 
+        \end{bmatrix}$$
+
+Dada la modificacón en $\overrightarrow{x}$, ahora el modelo de movimiento $f(\overrightarrow{x},\overrightarrow{u}, \overrightarrow{w})$ ahora pasará a ser:
+
+$$f(\overrightarrow{x},\overrightarrow{u}, \overrightarrow{w})= \begin{bmatrix}
+         x + Vx \Delta t cos(\theta) + Vy \Delta t sen(\theta) + w_1 \\
+         y + Vx \Delta t sen(\theta) + Vy \Delta t cos(\theta) + w_2 \\
+         norm_{[-\pi,\pi]} (\theta + w \Delta t) + w_3
+         \end{bmatrix}$$
+
+Calculando los jacobianos de la función $f$ respecto a $\overrightarrow{x}$ y a $\overrightarrow{w}$ respectivamente, tenemos:
+
+$$A= \begin{bmatrix}
+         1 & 0 & -sen(\theta)\Delta x + cos(\theta) \Delta t V y\\
+         1 & 0 & -cos(\theta)\Delta x - sen(\theta) \Delta t V y \\
+         0 & 0 & 1
+         \end{bmatrix}$$
+
+$$W$$
+
+El modelo de sensado $h(\overrightarrow{x},\overrightarrow{v})$ y las mediciones $z$ al no depender del tipo de movimiento que el robot omnidireccional ejerce, no se ve afectado por el modelo omnidireccional asi que permanecen como vimos previamente en la materia. Luego, la matriz Jacobiana H tampoco se ve afectada con respecto a lo que visto.
