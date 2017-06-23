@@ -88,3 +88,31 @@ $$A= \begin{bmatrix}
 $$W$$
 
 El modelo de sensado $h(\overrightarrow{x},\overrightarrow{v})$ y las mediciones $z$ al no depender del tipo de movimiento que el robot omnidireccional ejerce, no se ve afectado por el modelo omnidireccional asi que permanecen como vimos previamente en la materia. Luego, la matriz Jacobiana H tampoco se ve afectada con respecto a lo que visto.
+
+%TODO: modificacion de la covarianza inicial.
+
+\subsubsection{Experimentación}
+
+En esta seccion buscamos experimentar que tan bueno resulta el modelo EKF con las modificaciones descriptas previamente.
+
+Partiendo de un punto en el que el robot se encuentra frente a tres postes, podemos observar que logra estimar su posición con una matriz de covarianza (en azul) casi nula.
+
+\includegraphics[scale=0.3]{punto4/ekfViendoTodosLosPostes.png}
+
+Reduciendo la distancia entre los postes y el robot, logramos que este solo vea dos al mismo tiempo. En este momento su covarianza continua siendo casi imperceptible en la imagen.
+
+\includegraphics[scale=0.3]{punto4/ekfViendoDosPostes.png}
+
+Ahora posicionando el robot para que solo cense un poste, el grado de certeza decae considerablemente. Dado que ahora solo tenemos la referencia al eje $x$ la covarianza en el eje $y$ empieza a aumentar.
+
+\includegraphics[scale=0.3]{punto4/ekfViendoUnPoste.png}
+
+Si ahora volvemos a censar dos postes podemos observar como el robot tiene la posibilidad de recuperarse y volver a predecir su posicion de manera precisa, reduciendo la covarianza en el eje $y$.
+
+\includegraphics[scale=0.3]{punto4/ekfViendoTresPostesOtraVez.png}
+
+finalmente, si el robot no es capaz de sensar ningun poste, la covarianza tanto en x como en y empiezan a aumentar.
+
+\includegraphics[scale=0.3]{punto4/ekfSinVerNingunPoste.png}
+
+%conclucìón, EKF te permite darle mucho mas velocidad sin perder precición, en cambio con lazo cerrado, si aumentas mucho la cte, se te va todo al carajo.
