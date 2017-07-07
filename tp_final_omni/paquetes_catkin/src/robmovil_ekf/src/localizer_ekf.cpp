@@ -222,6 +222,7 @@ void robmovil_ekf::LocalizerEKF::makeBaseV(void)
 }
 
 /** Covarianza de v **/
+//Confianza de los sensores
 void robmovil_ekf::LocalizerEKF::makeBaseR()
 {
   R(1,1) = 0.001; // Var(rho) = (0.1)^2 (desvio de 10cm)
