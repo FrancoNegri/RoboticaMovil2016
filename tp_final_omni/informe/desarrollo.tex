@@ -3,7 +3,7 @@
 Como ya anticipamos, para este trabajo practico utilizaremos un robot omidireccional. Este cuenta con cuatro ruedas Mecanum dispuestas a los cuatro costados del robot, las cuales cuentan con rodillos especiales que permiten transmitir parte de la fuerza en direccion de un angulo definido.
 %motivacion -> para poder posicionarte
 
-Como primer desafío buscaremos determinar la velocidad de los actuadores y la velocidad en cada uno de los ejes de livertad del robot. Para esto adaptaremos el modelo cinematico visto durante la materia para a este nuevo tipo de actuadores utilizando el paper provisto por la catedra, las formulas de cinematica directa pasarán a ser.
+Como primer desafío buscaremos determinar la velocidad de los actuadores y la velocidad en cada uno de los ejes de livertad del robot. Para esto, adaptaremos el modelo cinematico visto durante la materia para a este nuevo tipo de actuadores utilizando el paper provisto por la catedra, las formulas de cinematica directa pasarán a ser.
 
 
 $$v_x(t)=(w_1+w_2+w_3+w_4).r/4$$
@@ -20,24 +20,53 @@ $$ w_4 = 1/r (v_x - v_y + (l_x + l_y)w_z$$
 
 %se podria hacer una lista.
 Donde $v_x$, $v_y$ y $w_z$ son las velocidades lineares y angular del robot, $r$ el radio de las ruedas (asumiremos que todas las ruedas tienen exactamente el mismo radio), $l_x$ la mita de la distancia entre las dos ruedas delanteras y $l_y$ la mitad de la distancia entre una rueda delantera y una rueda tracera.
-$w_1,w_2,w_3,w_4$ las velocidades angulares de las cuatro ruedas.
+$w_1,w_2,w_3,w_4$ las velocidades angulares de las cuatro ruedas. En particular para nuestro robot, tomaremos $r =0.05 $ metros, $l_x = l_y = 0.175 $ metros.
 
-%en que instanciamos cada valor de nuestro robot?
+Finalmente estas velocidades en $v_x$, $v_y$ y $w_z$ nos permitirán calculár la odometría del robot. Esta nos permite proveer una estimación de la pose del robot para cada instante de tiempo gracias a la información suministrada por los encoders de las ruedas y el tiempo transcurrido. Si bien esto nos permitirá estimar la pose del robot, a causa de los errores sistematicos del modelo utilizado, el error entre la pose real y la pose estimada divergerá con el tiempo.
 
-
-En particular para nuestro robot, tomaremos $r =0.05 $ metros, $l_x = l_y = 0.175 $ metros.
+En el siguiente apartado procederemos a analizar cuan bueno resulta nuestro modelo cinematico y los calculos odometricos.
 
 \subsubsection{Experimentación}
 
-En este apartado buscaremos validar que el moldeo antes descripto se condice con la realidad. Para ello, enviaremos mensajes a travez de rostopic con comandos de velocidad lineal y esperaremos ver que el modelo sepa traducir y aplicar la velocidad deseada en los actuadores. Luego utilizando los mensajes de cinematica inversa esperamos que el modelo pueda traducir nuevamente las velocidades angulares de los actuadores a las velocidades lineales y que estas se condigan con las que enviamos.
+Como ya adelantamos, en este apartado buscaremos ver que tan exacto resulta nuestro modelo cinematico y la odometría calculada de manera experimental. Para ello, enviaremos mensajes a robot/cmd_vel a travez de rostopic con distintas consignas de velocidad y veremos por rviz cual es la posición calculada por odometría (base_link) y cual es la posición real del robot (base_link_gt). 
 
-% Plantear experimentos que permitan validar y evaluar la efectividad
-% del modelo. Entre los experimentos a realizar se deben incluir gr ́aficos de consignas de velocidades lineales y angular
-% del robot junto a las correspondientes velocidades reales ejercidas por el robot, para su comparaci ́on. Asimismo, se
-% debe incluir un gr ́
-% afico que permita comparar la pose del robot estimada seg ́
-% un odometr ́ıa con la real informada por el
-% simulador.
+
+Como primer experimento enviamos el comando de velocidad $(v_x = 2, v_y=0, w_z=0)$ durante $8$ segundos:
+
+\begin{figure}[!htb]
+\includegraphics[width=\linewidth]{pruebasOdom/8segAdelante2.png}
+\end{figure}
+
+Podemos obeservar que incluso a altas velocidades el modelo es capaz de predecir con bastante exactitud su posición.
+
+
+Para el siguiente experimento, enviamos la consigna de velocidad $(v_x = 0, v_y=2, w_z=0)$ durante $8$ segundos.
+
+\begin{figure}[!htb]
+\includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda2.png}
+\end{figure}
+
+En este caso, podemos ver que la estimación odometrica diverge ampliamente con la provista por el simulador, incluso en vez de realizar una trayectoria recta hacia uno de los costados realiza una elipse. Esto puede deberse principalmente a que los rodillos especiales que le permiten transladarse en el eje $y$ resbalan o que los actuadores no logran cumplir la consigna deseada. Para el siguiente experimento volvemos a realizar el mismo experimento pero reduciendo la velocidad deseada.
+
+
+Enviando la consigna $(v_x = 0, v_y=0.5,w_z=0)$ durante 8 segundos: 
+
+\begin{figure}[!htb]
+\includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda0.5.png}
+\end{figure}
+
+Podemos ver que para velocidades menores la calidad de las predicciones odometricas son mucho mejores, aún así puede verse que en este eje el error crece mucho mas rapido que en el eje $x$.
+
+Para finalizar enviamos como consigna $(v_x = 0, v_y=0,w_z=2)$, luego de realizar 3 vueltas sobre su eje, detenemos al robot y visualizamos en rviz:
+
+\begin{figure}[!htb]
+\includegraphics[width=\linewidth]{pruebasOdom/3Vueltas2Vel.png}
+\end{figure}
+
+Puede verse que el error en este caso el error tampoco crece de manera desproporcionada incluso exigiendole altas velocidades.
+
+
+% Plantear experimentos que permitan validar y evaluar la efectividad del modelo. Entre los experimentos a realizar se deben incluir graficos de consignas de velocidades lineales y angular del robot junto a las correspondientes velocidades reales ejercidas por el robot, para su comparaci ́on. Asimismo, se debe incluir un grafico que permita comparar la pose del robot estimada seg un odometria con la real informada por el simulador.
 
 \subsection{Adaptación del control a lazo cerrado}
 
@@ -65,9 +94,7 @@ En esta sección pondremos a prueba el control a lazo cerrado para ver que tan b
 
 Para ello pondremos al robot a realizar el seguimiento de una trayectoria cuadrada de 2 metros de lado y veremos cual es el comportamiento del robot tomando $K=0.4,1$ y $4$.
 
-
 $K = 0.4$
-
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -196,9 +223,4 @@ $K=0.4$
 
 
 
-%conclucìón, EKF te permite darle mucho mas velocidad sin perder precición, en cambio con lazo cerrado, si aumentas mucho la cte, se te va todo al carajo.
-
-
-%sistema desarollado: mostrar los nodos y hablar de el ciclo cinematica directa -> ekf -> lazo cerrado -> cinematica inversa.
-
-%matriz de cov mostrar graficamente en el centro
+%conclucìón, EKF te permite darle mucho mas velocidad sin perder precición, en cambio con lazo cerrado, si aumentas mucho la cte,
