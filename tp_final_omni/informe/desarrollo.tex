@@ -1,10 +1,16 @@
 \subsection{Adaptacion del modelo Cinematico}
 %explicar que es cinematica directa e inversa
-Como ya anticipamos, para este trabajo practico utilizaremos un robot omidireccional. Este cuenta con cuatro ruedas Mecanum dispuestas a los cuatro costados del robot, las cuales cuentan con rodillos especiales que permiten transmitir parte de la fuerza en direccion de un angulo definido.
-%motivacion -> para poder posicionarte
+Como ya anticipamos, para este trabajo practico utilizaremos un robot omidireccional. Este cuenta con cuatro ruedas Mecanum dispuestas a los costados del robot, las cuales cuentan con rodillos especiales que permiten transmitir parte de la fuerza en direccion de un angulo definido.  %agregar mas detalles sobre las ruedas que estan en el abstract del paper
 
-Como primer desafío buscaremos determinar la velocidad de los actuadores y la velocidad en cada uno de los ejes de livertad del robot. Para esto, adaptaremos el modelo cinematico visto durante la materia para a este nuevo tipo de actuadores utilizando el paper provisto por la catedra, las formulas de cinematica directa pasarán a ser.
 
+El primer desafío que se nos presenta ante este nuevo sistema es poder plantear el modelo cinemático del mismo, recordemos que en el contexto de este trabajo la cinematica es el estudio de cómo se comporta el robot en movimiento y el aporte de cada rueda en este sistema basándose en los inputs de control, el movimiento esperado y sin considerar las fuerzas que se aplican.
+
+A partir de la relacion entre inputs y movimiento esperado queda definida la cinematica directa como la obtención de la velocidad lineal y angular (expresada en m/s y radianes respectivamente) del robot considerando la velocidad de cada actuador.
+
+Mientras que la cinematica inversa determina la velocidad de los actuadores en base a la velocidades deseadas.
+
+
+Para lograr esto, adaptaremos el modelo cinematico visto durante la materia utilizando el paper provisto por la catedra, las formulas de cinematica directa pasarán a ser.
 
 $$v_x(t)=(w_1+w_2+w_3+w_4).r/4$$
 $$v_y(t)=(-w_1+w_2+w_3-w_4).r/4$$
@@ -19,16 +25,18 @@ $$ w_3 = 1/r (v_x + v_y - (l_x + l_y)w_z$$
 $$ w_4 = 1/r (v_x - v_y + (l_x + l_y)w_z$$
 
 %se podria hacer una lista.
-Donde $v_x$, $v_y$ y $w_z$ son las velocidades lineares y angular del robot, $r$ el radio de las ruedas (asumiremos que todas las ruedas tienen exactamente el mismo radio), $l_x$ la mita de la distancia entre las dos ruedas delanteras y $l_y$ la mitad de la distancia entre una rueda delantera y una rueda tracera.
-$w_1,w_2,w_3,w_4$ las velocidades angulares de las cuatro ruedas. En particular para nuestro robot, tomaremos $r =0.05 $ metros, $l_x = l_y = 0.175 $ metros.
+Donde el Vector V = ($v_x$, $v_y$ y $w_z$) refiere a las velocidades lineares y angular del robot, $r$ el radio de las ruedas (todas las ruedas tienen exactamente el mismo radio), $l_x$ la mitad de la distancia entre las dos ruedas delanteras y $l_y$ la mitad de la distancia entre una rueda delantera y una rueda trasera.En particular para nuestro robot sabemos que $r =50 $ mm, $l_x = l_y = 175 $ mm. Por ultimo $w_1,w_2,w_3,w_4$ representan las velocidades angulares ejercidas por los actuadores de las ruedas.
 
-Finalmente estas velocidades en $v_x$, $v_y$ y $w_z$ nos permitirán calculár la odometría del robot. Esta nos permite proveer una estimación de la pose del robot para cada instante de tiempo gracias a la información suministrada por los encoders de las ruedas y el tiempo transcurrido. Si bien esto nos permitirá estimar la pose del robot, a causa de los errores sistematicos del modelo utilizado, el error entre la pose real y la pose estimada divergerá con el tiempo.
+Finalmente con las velocidades obtenidas en $v_x$, $v_y$ y $w_z$ podremos estimar la pose del robot en cada instante calculando el desplazamiento en el tiempo que las velocidades nos proveen.
+
+Si bien esto nos permitirá estimar la pose del robot, a causa de los errores sistematicos del modelo utilizado, el error entre la pose real y la pose estimada divergerá con el tiempo. 
+
 
 En el siguiente apartado procederemos a analizar cuan bueno resulta nuestro modelo cinematico y los calculos odometricos.
 
 \subsubsection{Experimentación}
 
-Como ya adelantamos, en este apartado buscaremos ver que tan exacto resulta nuestro modelo cinematico y la odometría calculada de manera experimental. Para ello, enviaremos mensajes a robot/cmd_vel a travez de rostopic con distintas consignas de velocidad y veremos por rviz cual es la posición calculada por odometría (base_link) y cual es la posición real del robot (base_link_gt). 
+Como ya adelantamos, en este apartado buscaremos ver que tan exacto resulta nuestro modelo cinematico y la odometría calculada de manera experimental. Para ello, enviaremos mensajes a robot\/cmd\_vel a través de rostopic con distintas consignas de velocidad y veremos por RViz cual es la posición calculada por odometría (base\_link) y cual es la posición real del robot (base\_link\_gt). 
 
 
 Como primer experimento enviamos el comando de velocidad $(v_x = 2, v_y=0, w_z=0)$ durante $8$ segundos:
@@ -37,7 +45,8 @@ Como primer experimento enviamos el comando de velocidad $(v_x = 2, v_y=0, w_z=0
 \includegraphics[width=\linewidth]{pruebasOdom/8segAdelante2.png}
 \end{figure}
 
-Podemos obeservar que incluso a altas velocidades el modelo es capaz de predecir con bastante exactitud su posición.
+
+Podemos observar que incluso a altas velocidades el modelo es capaz de predecir con bastante exactitud su posición.
 
 
 Para el siguiente experimento, enviamos la consigna de velocidad $(v_x = 0, v_y=2, w_z=0)$ durante $8$ segundos.
@@ -52,7 +61,7 @@ En este caso, podemos ver que la estimación odometrica diverge ampliamente con 
 Enviando la consigna $(v_x = 0, v_y=0.5,w_z=0)$ durante 8 segundos: 
 
 \begin{figure}[!htb]
-\includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda0.5.png}
+\includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda0_5.png}
 \end{figure}
 
 Podemos ver que para velocidades menores la calidad de las predicciones odometricas son mucho mejores, aún así puede verse que en este eje el error crece mucho mas rapido que en el eje $x$.
@@ -70,9 +79,12 @@ Puede verse que el error en este caso el error tampoco crece de manera despropor
 
 \subsection{Adaptación del control a lazo cerrado}
 
-Al igual que para el modelo diferencial queremos que el robot se pueda transladar de una pose actual $(x_i,y_i,w_i)$ en un tiempo $t_i$ a una pose objetivo $(x_f,y_f,w_f)$ en un tiempo diferente $t_f$. Para eso utilizaremos un control a lazo cerrado que nos perimitirá observar si el robot se encuentra en la pose deseada en cada instante, retroalimentando el error a los controladores de velocidad.
+%Este parrafo puede ir antes cuando mencionamos errores sistematicos o aca
+Así como encontramos errores sistematicos intrinsecos al diseño del robot, vale la pena destacar que por fuera del entorno simulado en el que estamos probando el modelo, tambien nos encontrariamos con errores no sistematicos del entorno que harían aun menos confiable a nuestra estimacion odometrica. Teniendo en consideración esto ultimo y la experimentación es necesario seguir agregando funcionalidades a nuestro modelo que permita mejorar la precision en el desplazamiento. 
 
-En este caso, al tener un modelo cinematico holonómico las cuentas se simplifican con respecto al modelo diferencial: Al tener control independiente sobre cada velocidad puedo plantear, para cada dimención por separado:
+Al igual que para el modelo diferencial queremos que el robot se pueda transladar de una pose actual $(x_i,y_i,w_i)$ en un tiempo $t_i$ a una pose objetivo $(x_f,y_f,w_f)$ en un tiempo diferente $t_f$. Para eso utilizaremos un control a lazo cerrado basado en el controlador Proporcional Integrativo Derivativo (PID) que nos perimitirá observar si el robot se encuentra en la pose deseada en cada instante, retroalimentando el error a los controladores de velocidad.
+
+En este caso, al tener un modelo cinematico holonómico las cuentas se simplifican con respecto al modelo diferencial, el control independiente sobre cada velocidad permite plantear cada  dimensión por separado:
 
 $$\Delta_x = x_f - x_i / (t_f - t_i)$$
 $$\Delta_y = y_f - y_i / (t_f - t_i)$$
@@ -85,12 +97,19 @@ $$V_y = K \Delta_y $$
 $$\theta = K \Delta_w $$
 
 Donde $K$ es una constante proporcional.
+%el termino proporcional se encarga de ajustar el error inmediato buscando llevar la diferencia en estado estacionando a cero.
+%el termino integral acumula los errores obtenidos hasta ese punto 
+%el termino derivativo utiliza el error para estimar diferencias a futuro
+
+%porque no se usaban el termino integral y derivativo?   
 
 Nos queda solucionar un caso borde que consiste en: si la pose actual y la objetivo se encuentran a una distancia infinita (o cercana a infinita), entonces será necesaria una velocidad infinita para alcanzarla. Dado que esto no es fisicamente posible, definimos una cota maxima de velocidad.
 
+%Cual era la cota de velocidad ?
+
 \subsubsection{Experimentación}
 
-En esta sección pondremos a prueba el control a lazo cerrado para ver que tan buenas \mejorar
+En esta sección pondremos a prueba el control a lazo cerrado para ver que tan buenas
 
 Para ello pondremos al robot a realizar el seguimiento de una trayectoria cuadrada de 2 metros de lado y veremos cual es el comportamiento del robot tomando $K=0.4,1$ y $4$.
 
@@ -108,6 +127,9 @@ $K = 0.4$
 \endminipage
 \end{figure}
 
+En el siguiente grafico podemos ver la trayectoria completa comparando los valores obtenidos con la consigna que habiamos definido:
+
+%aca iria el grafico en R con el trayecto obtenido para K=0.4
 
 $K = 1$
 
@@ -123,6 +145,8 @@ $K = 1$
   \includegraphics[width=\linewidth]{imagenesExpLazoCerrado/k1/5.png}
 \endminipage
 \end{figure}
+
+%idem con K=1
 
 \pagebreak
 $K = 4$
@@ -140,13 +164,46 @@ $K = 4$
 \endminipage
 \end{figure}
 
-En estas imagenes puede verse que si bien el robot sigue la trayectoria respecto a su posición estimada de manera precisa, la estimación de la posición y el graund truth divergen rapidamente para grandes valores. Concideramos que esto se debe a que a grandes velocidades, el modelo cinematico acumula error mas rapidamente y por eso la posición empeora.
+%idem con K=4
+
+
+En estas imagenes podemos notar que si bien el robot sigue la trayectoria respecto a su posición estimada de manera precisa, la estimación de la posición pierde precision a medida que aumentamos el valor de K y observamos que para cualquier valor mayor a 1 diverge de la trayectoria esperada muy rápido. Consideramos que esto se debe a que a grandes velocidades, el modelo cinematico acumula error mas rapidamente y por eso la posición empeora.
 
 \subsection{Modelado de EKF}
 
-Como solución al problema presentado en el apartado anterior, buscaremos alguna manera de poder corregir la pose del robot de alguna manera. Para eso utilizaremos un filtro de kalman extendido similar al visto en la materia, por lo que nuevamente contaremos con una etapa de predicción, en dode en base al modelo cinematico el robot intentará predecir su pose y otra etapa de correción donde el robot corregirá tomará los datos sensados y en base a eso corregirá su pose actual.
+Como solución al problema presentado en el apartado anterior, intentaremos mejorar la correccion de la pose del robot agregando un fase de prediccion del estado en el cual nuestro dispositivo se encuentra.
 
-En el caso del robot omidireccional utilizado ahora lo que cambia con respecto al modelo diferencial usado previamente es el modelo de predicción: ahora contamos con mas grados de libertad posibles en la translación. Ahora es posible que el robot se mueva tanto en $x$ como en $y$ y $\theta$.
+
+Para eso utilizaremos un filtro bayesiano implementando el Filtro de Kalman Extendido similar al visto en la materia para el modelo diferencial
+
+Lo que esta ocurriendo, en resumen, es que el robot usara informacion del sensado de un serie de postes ubicados en el entorno para ir actualizando el nivel de certidumbre que tiene de la ubicacion en la que se encuentra. Partiendo de un prior inicial el modelo queda definido por un fase de prediccion (time update) donde se obtienen estimaciones del estado y la covarianza del error y otra fase de correccion (measurement update) donde se actualizan los valores de la fase anterior con las mediciones obtenidas, el posterior obtenido pasa a ser nuestro nuevo prior y el algoritmo continua iterando este comportamiento.
+
+
+Partiendo de las funciones que definien estado y 
+
+xk = f(xk-1, uk-1,wk-1) + wk  (Proyeccion de la pose actual en funcion de una f de transicion sobre la iteracion anterior y la consideracion del ruido w)
+
+zk = h(xk-1,vk-1) + vk   (Estado del sensado a partir de la funcion h sobre la iteracion anterior considerando ruido del sensor v )
+
+El siguiente diagrama expresa el funcionamiento del EKF:
+
+%diagrama EKF
+
+
+Las variables presentes en el modelo son: 
+
+Vector x (estado en el que se encuentra el sistema)
+Matriz P (Error de la covarianza)
+Matriz Q (covarianza del ruido en la transicion (process))
+Matriz R (covarianza del ruido en el sensado (measurement))
+Matriz W (Jacobiano de las derivadas parciales de f respecto a w (error en el calculo del estado))
+Matriz A (Jacobiano de las derivadas parciales de f respecto a x (estado))
+Matriz V (Jacobiano de las derivadas parciales de h respecto a v (error de medicion))
+Matriz H (Jacobiano de las derivadas parciales de h respecto a x (estado))
+ 
+Por ultimo K se denomina la ganancia de Kalman, que representa el nivel de ponderancia que se le da a la informacion del sensado por sobre la predicción estimada.
+
+En el caso de lo que teniamos en el robot omnidireccional en el modelo de predicción ahora contamos con mas grados de libertad posibles en la translación. Ahora es posible que el robot se mueva tanto en $x$ como en $y$ y $\theta$.
 
 Por este motivo, el vector $\overrightarrow{u}$ que representa las entradas de control cambia de la siguiente manera:
 
