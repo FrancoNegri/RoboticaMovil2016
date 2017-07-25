@@ -2,7 +2,7 @@ En los ultimos años se ha visto un gran avance en el campo de la robotica y en 
 
 En este trabajo practico implementaremos un sistema que permita la realizacion de trayectorias con alto grado de seguridad y precision utilizando un robot omnidireccional. Para ello utilizaremos el entorno de desarrollo ROS y el entorno de simulación V-Rep.
 
-El robot en particular sobre el cual trabajaremos contará con cuatro ruedas fijas de tipo Mecanum de 50mm de radio y cuenta con un sensor frontal. 
+El robot en particular sobre el cual trabajaremos contará con cuatro ruedas fijas de tipo Mecanum de 50mm de radio y cuenta con un sensor laser frontal. 
 
 El estudio del movimiento esta dado por el modelado de las fuerzas que afectan el sistema (dinamica) y la matematica presente en la mecanica de movimiento que define las poses del robot en el tiempo (cinematica). En este trabajo nos centramos en lo segundo.
 
@@ -12,3 +12,5 @@ Por ultimo se incorporo al sistema un filtro bayesiano, filtro de kalman extendi
 
 
 %De este modo, parte de nuestro trabajo será implementar un modelo cinematico acorde que nos permita tanto controlar la velocidad como estimar la velocidad lineal y angular a partir de la informacion sensada por las cuatro ruedas.
+
+%No mencionamos que usamos el mismo modulo laser que para el tp del robot diferencial?
