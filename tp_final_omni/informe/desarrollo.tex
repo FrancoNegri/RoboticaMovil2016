@@ -187,8 +187,7 @@ zk = h(xk-1,vk-1) + vk   (Estado del sensado a partir de la funcion h sobre la i
 
 El siguiente diagrama expresa el funcionamiento del EKF:
 
-%diagrama EKF
-
+%diagrama EKF en apunte kalman_notes01.pdf
 
 Las variables presentes en el modelo son: 
 
@@ -240,9 +239,9 @@ $$A= \begin{bmatrix}
 
 $$W$$
 
-El modelo de sensado $h(\overrightarrow{x},\overrightarrow{v})$ y las mediciones $z$ al no depender del tipo de movimiento que el robot omnidireccional ejerce, no se ve afectado por el modelo omnidireccional asi que permanecen como vimos previamente en la materia. Luego, la matriz Jacobiana H tampoco se ve afectada con respecto a lo que visto.
+El modelo de sensado $h(\overrightarrow{x},\overrightarrow{v})$ y las mediciones $z$ al no depender del tipo de movimiento que el robot omnidireccional ejerce, no se cambia asi que permanecen con los valores definidos por defectos iguales a los del modelo diferencial. De la misma forma la matriz Jacobiana H tampoco presenta cambios.
 
-%TODO: modificacion de la covarianza inicial.
+%TODO: modificacion de la covarianza inicial. Sobre esto lo unico que hay para mencionar (abajo) es que se experimento con distintos niveles de covarianza inicial tanto para sensado como para movimiento pero en ambos casos el valor se estabiliza en pocas iteraciones.
 
 \subsubsection{Experimentación}
 
@@ -256,15 +255,15 @@ Reduciendo la distancia entre los postes y el robot, logramos que este solo vea 
 
 \includegraphics[scale=0.3]{punto4/ekfViendoDosPostes.png}
 
-Ahora posicionando el robot para que solo cense un poste, el grado de certeza decae considerablemente. Dado que ahora solo tenemos la referencia al eje $x$ la covarianza en el eje $y$ empieza a aumentar.
+Ahora posicionando el robot para que solo sence un poste, el grado de certeza decae considerablemente. Dado que ahora solo tenemos la referencia al eje $x$ la covarianza en el eje $y$ empieza a aumentar haciendo perceptible el elipsoide violeta ensanchandose sobre ese eje .
 
 \includegraphics[scale=0.3]{punto4/ekfViendoUnPoste.png}
 
-Si ahora volvemos a censar dos postes podemos observar como el robot tiene la posibilidad de recuperarse y volver a predecir su posicion de manera precisa, reduciendo la covarianza en el eje $y$.
+Si ahora volvemos a sensar dos postes podemos observar como el robot tiene la posibilidad de recuperarse y volver a conseguir una prediccion precisa de su posicion, la covarianza en el eje $y$ se reduce a valores parecidos a los que teniamos antes.
 
 \includegraphics[scale=0.3]{punto4/ekfViendoTresPostesOtraVez.png}
 
-finalmente, si el robot no es capaz de sensar ningun poste, la covarianza tanto en x como en y empiezan a aumentar.
+Finalmente, si el robot no es capaz de sensar ningun poste, la covarianza tanto en x como en y empiezan a aumentar.
 
 \includegraphics[scale=0.3]{punto4/ekfSinVerNingunPoste.png}
 
@@ -278,6 +277,32 @@ Nuevamente probamos con $K= 0.4,1$ y $4$:
 $K=0.4$
 
 
+%Comparativa de trayectorias entre lazo cerrado y lazo cerrado con EKF:
+
+%concluciones: EKF te permite darle mucho mas velocidad sin perder precición, en cambio con lazo cerrado, si aumentas mucho la cte,
 
 
-%conclucìón, EKF te permite darle mucho mas velocidad sin perder precición, en cambio con lazo cerrado, si aumentas mucho la cte,
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{Detalles del sistema desarrollado}  ---> En mi opinion esto queda mejor como apendice o despues de la intro, lo moveria..
+
+%La implementación del sistema completo requiere de la comunicacion de los siguientes nodos:
+
+%rqtgraph
+
+%Utilizando como base los nodos provistos por la catedra hubo que hacer modificaciones sobre los siguientes paquetes:
+%-lazo cerrado: adaptacion del modelo cinematico y control de feedback
+%-robmovil_ekf: variante del modelo EKF del nuevo sistema
+%-logger_node: nodo que fue necesario para conseguir los datos experimentales en  poses de los distintos marcos de referencia
+%-alguno mas?
+
+%-Para correr el sistema ejecutar las siguientes instrucciones:
+%-catkin build
+%-roscore
+%-En este punto es recomendable levantar la escena de V-Rep 
+%-source devel/setup.bash
+%-catkin launch robmovil_ekf robmovil_ekf.launch 
+%-Si va a usarse Rviz para algun tipo de analisis es necesario setear source sobre la carpeta contenedora el plugin.
+
+%\subsection{Conclusiones finales}
