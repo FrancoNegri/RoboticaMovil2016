@@ -1,0 +1,16 @@
+En los ultimos años se ha visto un gran avance en el campo de la robotica y en tareas automatizables. En particular, los robots omnidireccionales se han empezado a utilizar tanto en la industria, por su capacidad de maniobrar en espacios reducidos, como en la domotica por su comodidad.
+
+En este trabajo practico implementaremos un sistema que permita la realizacion de trayectorias con alto grado de seguridad y precision utilizando un robot omnidireccional. Para ello utilizaremos el entorno de desarrollo ROS y el entorno de simulación V-Rep.
+
+El robot en particular sobre el cual trabajaremos contará con cuatro ruedas fijas de tipo Mecanum de 50mm de radio y cuenta con un sensor laser frontal. 
+
+El estudio del movimiento esta dado por el modelado de las fuerzas que afectan el sistema (dinamica) y la matematica presente en la mecanica de movimiento que define las poses del robot en el tiempo (cinematica). En este trabajo nos centramos en lo segundo.
+
+Una vez definido el modelo cinematico se valido su implementacion considerando la estimacion odometrica del sistema. Se procedio a estudiar el error en la diferencia entre pose obtenida y pose deseada a partir del manejo de la orientacion con control a lazo cerrado (feedback). Teniendo este primer modelo de control del error se evaluo la efectividad del seguimiento de una trayectoria sencilla.
+
+Por ultimo se incorporo al sistema un filtro bayesiano, filtro de kalman extendido, para intentar reducir aun mas el error cometido entre pose resultante y esperada. Se muestran experimentos que muestran el impacto del filtro de Kalman sobre la orientacion y el seguimiento de la trayectoria previamente usada para el caso anterior.   
+
+
+%De este modo, parte de nuestro trabajo será implementar un modelo cinematico acorde que nos permita tanto controlar la velocidad como estimar la velocidad lineal y angular a partir de la informacion sensada por las cuatro ruedas.
+
+%No mencionamos que usamos el mismo modulo laser que para el tp del robot diferencial?
