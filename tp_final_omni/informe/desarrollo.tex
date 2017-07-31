@@ -1,11 +1,11 @@
-\subsection{Adaptacion del modelo cinemático}
+\subsection{Adaptación del modelo cinemático}
 %explicar que es cinemática directa e inversa
-Como ya anticipamos, para este trabajo practico utilizaremos un robot omidireccional. Este cuenta con cuatro ruedas  \textit{Mecanum} dispuestas a los costados del robot, las cuáles cuentan con rodillos especiales que permiten transmitir parte de la fuerza en direccion de un angulo definido.  %agregar mas detalles sobre las ruedas que estan en el abstract del paper
+Como ya anticipamos, para este trabajo practico utilizaremos un robot omidireccional. Este cuenta con cuatro ruedas  \textit{Mecanum} dispuestas a los costados del robot, las cuáles cuentan con rodillos especiales que permiten transmitir parte de la fuerza en dirección de un ángulo definido.  %agregar mas detalles sobre las ruedas que estan en el abstract del paper
 
 
 El primer desafío que se nos presenta ante este nuevo sistema es poder plantear el modelo cinemático del mismo, recordemos que en el contexto de este trabajo la cinemática es el estudio de cómo se comporta el robot en movimiento y el aporte de cada rueda en este sistema basándose en los inputs de control, el movimiento esperado y sin considerar las fuerzas que se aplican.
 
-Considerando la relacion entre inputs y movimiento esperado queda definida la cinemática directa como la obtención de la velocidad lineal y angular (expresada en m/s y radianes respectivamente) del robot a partir de la velocidad de cada actuador.
+Considerando la relación entre inputs y movimiento esperado queda definida la cinemática directa como la obtención de la velocidad lineal y angular (expresada en m/s y radianes respectivamente) del robot a partir de la velocidad de cada actuador.
 
 Por su parte la cinemática inversa determina la velocidad de los actuadores en base a la velocidades deseadas.
 
@@ -28,7 +28,7 @@ Donde el Vector V = ($v_x$, $v_y$ y $w_z$) refiere a las velocidades lineares y 
 
 Finalmente con las velocidades obtenidas en $v_x$, $v_y$ y $w_z$ podremos estimar la pose del robot en cada instante calculando el desplazamiento en el tiempo que las velocidades nos proveen.
 
-Si bien esto nos permitirá estimar la pose del robot, a causa de los errores sistemáticos del modelo utilizado, el error entre la pose real y la pose estimada divergerá con el tiempo. 
+Si bien esto nos permitirá estimar la pose del robot, a causa de los errores sistemáticos del modelo utilizado, el error entre la pose real y la pose estimada divergirá con el tiempo. 
 
 
 En el siguiente apartado procederemos a analizar cuan bueno resulta nuestro modelo cinemático y los cálculos odométricos.
@@ -53,7 +53,7 @@ Para el siguiente experimento, enviamos la consigna de velocidad $(v_x = 0, v_y=
 \includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda2.png}
 \end{figure}
 
-En este caso, podemos ver que la estimación odometrica diverge ampliamente con la provista por el simulador, incluso en vez de realizar una trayectoria recta hacia uno de los costados realiza una elipse. Esto puede deberse principalmente a que los rodillos especiales que le permiten transladarse en el eje $y$ resbalan o que los actuadores no logran cumplir la consigna deseada. Para el siguiente experimento volvemos a realizar el mismo experimento pero reduciendo la velocidad deseada.
+En este caso, podemos ver que la estimación odometrica diverge ampliamente con la provista por el simulador, incluso en vez de realizar una trayectoria recta hacia uno de los costados realiza una elipse. Esto puede deberse principalmente a que los rodillos especiales que le permiten trasladarse en el eje $y$ resbalan o que los actuadores no logran cumplir la consigna deseada. Para el siguiente experimento volvemos a realizar el mismo experimento pero reduciendo la velocidad deseada.
 
 Enviando la consigna $(v_x = 0, v_y=0.5,w_z=0)$ durante 8 segundos: 
 
@@ -61,7 +61,7 @@ Enviando la consigna $(v_x = 0, v_y=0.5,w_z=0)$ durante 8 segundos:
 \includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda05.png}
 \end{figure}
 
-Podemos ver que para velocidades menores la calidad de las predicciones odométricas son mucho mejores, aún así puede verse que en este eje el error crece mucho mas rapido que en el eje $x$.
+Podemos ver que para velocidades menores la calidad de las predicciones odométricas son mucho mejores, aún así puede verse que en este eje el error crece mucho mas rápido que en el eje $x$.
 
 \pagebreak
 
@@ -79,9 +79,9 @@ Puede verse que el error en este caso tampoco crece de manera desproporcionada i
 \subsection{Adaptación del control a lazo cerrado}
 
 %Este parrafo puede ir antes cuando mencionamos errores sistematicos o aca
-Así como encontramos errores sistemáticos intrínsecos al diseño del robot, vale la pena destacar que por fuera del entorno simulado en el que estamos probando el modelo, tambien nos encontraríamos con errores no sistemáticos del entorno que harían aun menos confiable a nuestra estimacion odometrica. Sumando a consideración la experimentación y esto último es necesario seguir agregando funcionalidades a nuestro modelo que permita mejorar la precisión en el desplazamiento. 
+Así como encontramos errores sistemáticos intrínsecos al diseño del robot, vale la pena destacar que por fuera del entorno simulado en el que estamos probando el modelo, también nos encontraríamos con errores no sistemáticos del entorno que harían aun menos confiable a nuestra estimación odometrica. Sumando a consideración la experimentación y esto último es necesario seguir agregando funcionalidades a nuestro modelo que permita mejorar la precisión en el desplazamiento. 
 
-Al igual que para el robot con modelo diferencial queremos que este se pueda transladar de una pose actual $(x_i,y_i,w_i)$ en un tiempo $t_i$ a una pose objetivo $(x_f,y_f,w_f)$ en un tiempo diferente $t_f$. Para eso utilizaremos un control a lazo cerrado basado en el controlador Proporcional Integrativo Derivativo (PID) que nos perimitirá observar si el robot se encuentra en la pose deseada en cada instante, retroalimentando el error a los controladores de velocidad.
+Al igual que para el robot con modelo diferencial queremos que este se pueda trasladar de una pose actual $(x_i,y_i,w_i)$ en un tiempo $t_i$ a una pose objetivo $(x_f,y_f,w_f)$ en un tiempo diferente $t_f$. Para eso utilizaremos un control a lazo cerrado basado en el controlador Proporcional Integrativo Derivativo (PID) que nos permitirá observar si el robot se encuentra en la pose deseada en cada instante, retroalimentando el error a los controladores de velocidad.
 
 En este caso, al tener un modelo cinemático holonómico las cuentas se simplifican con respecto al modelo diferencial, el control independiente sobre cada velocidad permite plantear cada  dimensión por separado:
 
@@ -102,7 +102,7 @@ Donde $K$ es una constante proporcional.
 
 %porque no se usaban el termino integral y derivativo?   
 
-Nos queda solucionar un caso borde que se da si la pose actual y la objetivo se encuentran a una distancia infinita (o cercana a infinita), en este caso será necesaria una velocidad infinita para alcanzarla. Dado que esto no es fisicamente posible, definimos una cota maxima de velocidad.
+Nos queda solucionar un caso borde que se da si la pose actual y la objetivo se encuentran a una distancia infinita (o cercana a infinita), en este caso será necesaria una velocidad infinita para alcanzarla. Dado que esto no es físicamente posible, definimos una cota máxima de velocidad.
 
 %Cual era la cota de velocidad ?
 
@@ -126,7 +126,7 @@ $K = 0.4$
 \endminipage
 \end{figure}
 
-En el siguiente gráfico podemos ver la trayectoria completa comparando los valores obtenidos con la consigna que habiamos definido:
+En el siguiente gráfico podemos ver la trayectoria completa comparando los valores obtenidos con la consigna que habíamos definido:
 
 %aca iria el grafico en R con el trayecto obtenido para K=0.4
 
@@ -166,22 +166,22 @@ $K = 4$
 %idem con K=4
 
 
-En estas imagenes podemos notar que si bien el robot sigue la trayectoria respecto a su posición estimada de manera precisa, la estimación de la posición pierde precision a medida que aumentamos el valor de K y observamos que para cualquier valor mayor a 1 diverge de la trayectoria esperada muy rápido. Consideramos que esto se debe a que a grandes velocidades, el modelo cinemático acumula error más rapidamente y por eso cada posición va empeorando respecto a la esperada.
+En estas imágenes podemos notar que si bien el robot sigue la trayectoria respecto a su posición estimada de manera precisa, la estimación de la posición pierde precisión a medida que aumentamos el valor de K y observamos que para cualquier valor mayor a 1 diverge de la trayectoria esperada muy rápido. Consideramos que esto se debe a que a grandes velocidades, el modelo cinemático acumula error más rápidamente y por eso cada posición va empeorando respecto a la esperada.
 
 \subsection{Modelado de EKF}
 
-Como solución al problema presentado en el apartado anterior, intentaremos mejorar la correccion de la pose del robot agregando un fase de predicción del estado en el cual se encuentra.
+Como solución al problema presentado en el apartado anterior, intentaremos mejorar la corrección de la pose del robot agregando un fase de predicción del estado en el cual se encuentra.
 
 Para eso utilizaremos un filtro bayesiano implementando el Filtro de Kalman Extendido similar al visto en la materia para el modelo diferencial.
 
-Lo que está ocurriendo, en resumen, es que el robot usará información del sensado de un serie de postes ubicados en el entorno para ir actualizando el nivel de certidumbre respecto a la ubicación en la que se encuentra. Partiendo de un \textit{prior} inicial el modelo queda definido por un fase de predicción (\textit{time update}) donde se obtienen estimaciones del estado y la covarianza del error y otra fase de corrección (\textit{measurement update}) donde se actualizan los valores de la fase anterior con las mediciones obtenidas, el \textit{posterior} obtenido pasa a ser nuestro nuevo \textit{prior} y el algoritmo continua iterando de forma análoga.
+Lo que está ocurriendo, en resumen, es que el robot usará información del censado de un serie de postes ubicados en el entorno para ir actualizando el nivel de certidumbre respecto a la ubicación en la que se encuentra. Partiendo de un \textit{prior} inicial el modelo queda definido por un fase de predicción (\textit{time update}) donde se obtienen estimaciones del estado y la covarianza del error y otra fase de corrección (\textit{measurement update}) donde se actualizan los valores de la fase anterior con las mediciones obtenidas, el \textit{posterior} obtenido pasa a ser nuestro nuevo \textit{prior} y el algoritmo continua iterando de forma análoga.
 
 
-Partiendo de las funciones que definien ubicación y sensado tenemos:
+Partiendo de las funciones que definen ubicación y censado tenemos:
 
-$x_k = f(x_{k-1}, u_{k-1},w_{k-1}) + w_k$  (Proyeccion de la pose actual en funcion de una $f$ de transicion sobre la iteracion anterior y la consideracion del ruido w)
+$x_k = f(x_{k-1}, u_{k-1},w_{k-1}) + w_k$  (Proyección de la pose actual en función de una $f$ de transición sobre la iteración anterior y la consideración del ruido w)
 
-$z_k = h(x_{k-1},v_{k-1}) + v_k$   (Estado del sensado a partir de una funcion $h$ sobre la iteracion anterior considerando ruido del sensor v )
+$z_k = h(x_{k-1},v_{k-1}) + v_k$   (Estado del censado a partir de una función $h$ sobre la iteración anterior considerando ruido del sensor v )
 
 El siguiente diagrama expresa el funcionamiento del EKF:
 
@@ -193,14 +193,14 @@ Las variables presentes en el modelo son:
 
 Vector x (estado en el que se encuentra el sistema)
 Matriz P (Error de la covarianza)
-Matriz Q (covarianza del ruido en la transicion (process))
-Matriz R (covarianza del ruido en el sensado (measurement))
+Matriz Q (covarianza del ruido en la transición (process))
+Matriz R (covarianza del ruido en el censado (measurement))
 Matriz W (Jacobiano de las derivadas parciales de f respecto a w (error en el calculo del estado))
 Matriz A (Jacobiano de las derivadas parciales de f respecto a x (estado))
-Matriz V (Jacobiano de las derivadas parciales de h respecto a v (error de medicion))
+Matriz V (Jacobiano de las derivadas parciales de h respecto a v (error de medición))
 Matriz H (Jacobiano de las derivadas parciales de h respecto a x (estado))
  
-Por ultimo K se denomina \textit{ganancia de Kalman} y representa el nivel de ponderancia que se le da a la información del sensado por sobre la predicción estimada.
+Por ultimo K se denomina \textit{ganancia de Kalman} y representa el nivel de ponderación que se le da a la información del censado por sobre la predicción estimada.
 
 En este caso de lo que teníamos en el robot diferencial en el modelo de predicción ahora contamos con más grados de libertad posibles en la translación. Ahora es posible que el robot se mueva tanto en $x$ como en $y$ y $\theta$.
 
@@ -221,7 +221,7 @@ $$\overrightarrow{x} = \begin{bmatrix}
          \theta 
         \end{bmatrix}$$
 
-Dada la modificacón en $\overrightarrow{x}$, ahora el modelo de movimiento $f(\overrightarrow{x},\overrightarrow{u}, \overrightarrow{w})$ ahora pasará a ser:
+Dada la modificación en $\overrightarrow{x}$, ahora el modelo de movimiento $f(\overrightarrow{x},\overrightarrow{u}, \overrightarrow{w})$ ahora pasará a ser:
 
 $$f(\overrightarrow{x},\overrightarrow{u}, \overrightarrow{w})= \begin{bmatrix}
          x + Vx \Delta t cos(\theta) + Vy \Delta t sen(\theta) + w_1 \\
@@ -239,7 +239,7 @@ $$A= \begin{bmatrix}
 
 $$W$$
 
-El modelo de sensado $h(\overrightarrow{x},\overrightarrow{v})$ y las mediciones $z$ al no depender del tipo de movimiento que el robot omnidireccional ejerce no cambian, así que permanecen con los valores definidos por defecto iguales a los del modelo diferencial. De la misma forma la matriz Jacobiana H tampoco presenta cambios.
+El modelo de censado $h(\overrightarrow{x},\overrightarrow{v})$ y las mediciones $z$ al no depender del tipo de movimiento que el robot omnidireccional ejerce no cambian, así que permanecen con los valores definidos por defecto iguales a los del modelo diferencial. De la misma forma la matriz Jacobiana H tampoco presenta cambios.
 
 %TODO: Hablar sobre la experimentación que pide sobre modificar la covarianza inicial. Sobre esto lo unico que hay para mencionar (abajo) es que se experimento con distintos niveles de covarianza inicial tanto para sensado como para movimiento pero en ambos casos el valor se estabiliza en pocas iteraciones.
 
@@ -255,15 +255,15 @@ Reduciendo la distancia entre los postes y el robot, si este solo percibe dos al
 
 \includegraphics[scale=0.3]{punto4/ekfViendoDosPostes.png}
 
-Ahora posicionando el robot para que solo sence un poste, el grado de certeza decae considerablemente. Dado que ahora solo tenemos la referencia al eje $x$ la covarianza en el eje $y$ empieza a aumentar haciendo perceptible el elipsoide violeta ensanchándose sobre ese eje.
+Ahora posicionando el robot para que solo cense un poste, el grado de certeza decae considerablemente. Dado que ahora solo tenemos la referencia al eje $x$ la covarianza en el eje $y$ empieza a aumentar haciendo perceptible el elipsoide violeta ensanchándose sobre ese eje.
 
 \includegraphics[scale=0.3]{punto4/ekfViendoUnPoste.png}
 
-Si ahora volvemos a sensar dos postes podemos observar como el robot tiene la posibilidad de recuperarse y volver a conseguir una predicción precisa de su posición, la covarianza en el eje $y$ se reduce a valores parecidos a los que teniamos antes.
+Si ahora volvemos a censar dos postes podemos observar como el robot tiene la posibilidad de recuperarse y volver a conseguir una predicción precisa de su posición, la covarianza en el eje $y$ se reduce a valores parecidos a los que teníamos antes.
 
 \includegraphics[scale=0.3]{punto4/ekfViendoTresPostesOtraVez.png}
 
-Finalmente, si el robot no es capaz de sensar ningun poste, la covarianza tanto en $x$ como en $y$ aumenta.
+Finalmente, si el robot no es capaz de censar ningún poste, la covarianza tanto en $x$ como en $y$ aumenta.
 
 \includegraphics[scale=0.3]{punto4/ekfSinVerNingunPoste.png}
 
@@ -288,7 +288,7 @@ Para $K=0.4$:
 \endminipage
 \end{figure}
 
-En este caso podemos ver que el base\_link\_ekf permanece casi pegado al ground\_truth durante todo el recorrido. Adenas contamos con el base\_link (estimación odometrica sin utilizar EKF) para analizar de manera comparativa con los otros dos valores. En este caso en particular, el base\_link no se aparta demasiado de los otros dos valores.
+En este caso podemos ver que el base\_link\_ekf permanece casi pegado al ground\_truth durante todo el recorrido. Además contamos con el base\_link (estimación odometrica sin utilizar EKF) para analizar de manera comparativa con los otros dos valores. En este caso en particular, el base\_link no se aparta demasiado de los otros dos valores.
 
 Repetimos el experimento para $K=1$:
 
@@ -326,7 +326,7 @@ Finalmente para $K=4$:
 
 Podemos ver que base\_link\_ekf aún para velocidades tan restrictivas permite estimar de manera muy precisa la pose real del robot, no así el base\_link que ya para este caso diverge a cualquier valor.
 
-En conclusion podemos apreciar que aplicando EKF es posible aplicar valores mucho mas restrictivos sobre la velocidad sin perder precisión en los valores odométricos. Si recordamos en el apartado de control a lazo cerrado esto no era posible ya que la acumulación de errores sistemáticos y del modelo cinemático en sí llevaba a estimaciones que no representaban de manera alguna la realidad.
+En conclusión podemos apreciar que aplicando EKF es posible aplicar valores mucho mas restrictivos sobre la velocidad sin perder precisión en los valores odométricos. Si recordamos en el apartado de control a lazo cerrado esto no era posible ya que la acumulación de errores sistemáticos y del modelo cinemático en sí llevaba a estimaciones que no representaban de manera alguna la realidad.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -342,9 +342,9 @@ Sobre esta gran cantidad de mensajes siendo intercambiados en paralelo podemos d
 
 El nodo encargado de la odometría recibe la información de los comandos de velocidad t encoders para enviar su estimación de la pose, esta es capturada por el "trajectory follower" que mide la distancia a la pose del goal juntando esto con lo recibido por el "trajectory generator" y publicando las consignas de velocidades necesarias para avanzar hacia el goal.
 
-Por su parte el nodo "localizer" se suscribe a los tópicos de odometría, la información de sensado y la ubicación del robot y postes en el simulado, con esto obtiene las consignas de covarianza y publica las transformaciones desde el marco EKF al del robot.
+Por su parte el nodo "localizer" se suscribe a los tópicos de odometría, la información de senado y la ubicación del robot y postes en el simulado, con esto obtiene las consignas de covarianza y publica las transformaciones desde el marco EKF al del robot.
 
-Por último el detector de landmarks de la IMU usa la información usa la informacion de scanning para actualizar la información de distancia respecto a los "landmarks".
+Por último el detector de landmarks de la IMU usa la información usa la información de scanning para actualizar la información de distancia respecto a los "landmarks".
 
 %Utilizando como base los nodos provistos por la catedra hubo que hacer modificaciones sobre los siguientes paquetes:
 %-lazo cerrado: adaptacion del modelo cinemático y control de feedback
