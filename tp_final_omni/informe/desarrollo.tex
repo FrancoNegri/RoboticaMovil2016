@@ -119,7 +119,7 @@ Nos queda solucionar un caso borde que se da si la pose actual y la objetivo se 
 
 A continuación se pone a prueba el control a lazo cerrado:
 
-Para ello pondremos al robot a realizar el seguimiento de una trayectoria cuadrada de 2 metros de lado y veremos cual es el comportamiento del robot tomando $K=0.4,1$ y $4$.
+Para ello pondremos al robot a realizar el seguimiento de una trayectoria cuadrada de 2 metros de lado y veremos cual es el comportamiento del robot tomando $K=0.4,1$ y $4$ y visualizandolo en r-viz.
 
 $K = 0.4$
 
@@ -136,7 +136,7 @@ $K = 0.4$
 \end{figure}
 \FloatBarrier
 
-A continuación graficamos la trayectoria obtenida a partir del \textit{loggeo} de poses en el tiempo: 
+Como otra metodología de visualización, logeamos las poses provenientes del graund truth provistas por roscore y los graficamos de la siguiente manera:
 
 % insertar grafico 
 \begin{figure}[!htb]
@@ -147,8 +147,6 @@ A continuación graficamos la trayectoria obtenida a partir del \textit{loggeo} 
 \FloatBarrier
 
 $K = 1$
-
-
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -425,14 +423,17 @@ En conclusión podemos apreciar que aplicando EKF es posible aplicar valores muc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\subsection{Detalles del sistema desarrollado}  ---> En mi opinion esto queda mejor como apendice o despues de la intro, lo moveria..
+\subsection{Detalles del sistema desarrollado}
 
-%La implementación del sistema completo requiere de la comunicacion de los siguientes nodos:
+Para concluir el trabajo presentamos un pantallazo general de todos los nodos trabajando en conjunto:
 
-%\includegraphics[width=\linewidth]{rqtgraphekf.png} 
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth]{rqtgraphekf.png} 
+\end{center}
+\end{figure}
 
-%TODO breve descripcion de la comunicacion entre nodos:
-Sobre esta gran cantidad de mensajes siendo intercambiados en paralelo podemos destacar como lo más relevante al problema lo siguiente:
+Sobre esta gran cantidad de mensajes siendo intercambiados en paralelo podemos destacar como lo más relevante al problema los siguientes:
 
 El nodo encargado de la odometría recibe la información de los comandos de velocidad t encoders para enviar su estimación de la pose, esta es capturada por el "trajectory follower" que mide la distancia a la pose del goal juntando esto con lo recibido por el "trajectory generator" y publicando las consignas de velocidades necesarias para avanzar hacia el goal.
 
