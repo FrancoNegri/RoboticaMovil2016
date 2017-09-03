@@ -20,8 +20,8 @@
 \usepackage{mathtools}
 \usepackage[section]{placeins}
 \usepackage{etoolbox}
-\preto{\subsection}{\clearpageafterfirst}
-\preto{\includegraphics}{\filbreak}
+\preto{\section}{\clearpageafterfirst}
+\preto{\subsection}{\filbreak}
 \newcommand{\clearpageafterfirst}{%
   \gdef\clearpageafterfirst{\clearpage}%
 }
@@ -35,7 +35,7 @@
 \input{intro.tex}
 \section{Desarrollo}
 \input{desarrollo.tex}
-\section{Concluciones}
+\section{Conclusiones}
 \input{concluciones.tex}
 
 \end{document}

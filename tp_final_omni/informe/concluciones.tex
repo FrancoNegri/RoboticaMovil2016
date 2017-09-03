@@ -6,4 +6,22 @@ Centrándonos en los resultados observamos que nuestra implementación presenta 
 
 %Hay algo mas para poner? Como por ejemplo cosas que no habia que hacer pero se pueden mejorar/agregar al TP? 
 
+\section{Apendice}
 
+\subsection{Detalles del sistema desarrollado}
+
+Para concluir el trabajo presentamos un pantallazo general de todos los nodos trabajando en conjunto:
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth]{rqtgraphekf.png} 
+\end{center}
+\end{figure}
+
+Sobre esta gran cantidad de mensajes siendo intercambiados en paralelo podemos destacar como lo más relevante al problema los siguientes:
+
+El nodo encargado de la odometría recibe la información de los comandos de velocidad t encoders para enviar su estimación de la pose, esta es capturada por el "trajectory follower" que mide la distancia a la pose del goal juntando esto con lo recibido por el "trajectory generator" y publicando las consignas de velocidades necesarias para avanzar hacia el goal.
+
+Por su parte el nodo "localizer" se suscribe a los tópicos de odometría, la información de senado y la ubicación del robot y postes en el simulado, con esto obtiene las consignas de covarianza y publica las transformaciones desde el marco EKF al del robot.
+
+Por último el detector de landmarks de la IMU usa la información usa la información de scanning para actualizar la información de distancia respecto a los "landmarks".

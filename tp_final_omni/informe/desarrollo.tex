@@ -162,6 +162,8 @@ $K = 1$
 \FloatBarrier
 
 % insertar grafico 
+Trayectoria Efectiva:
+
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=\linewidth/2]{imagenesTrayectorias/lazocerrado/lazocerrado1.png}
@@ -186,6 +188,8 @@ $K = 4$
 \endminipage
 \end{figure}
 \FloatBarrier
+
+Trayectoria Efectiva:
 
 % insertar grafico 
 \begin{figure}[!htb]
@@ -226,15 +230,16 @@ El siguiente diagrama expresa el funcionamiento del EKF:
 
 Las variables presentes en el modelo son: 
 
-Vector x (estado en el que se encuentra el sistema)
-Matriz P (Error de la covarianza)
-Matriz Q (covarianza del ruido en la transición (process))
-Matriz R (covarianza del ruido en el censado (measurement))
-Matriz W (Jacobiano de las derivadas parciales de f respecto a w (error en el calculo del estado))
-Matriz A (Jacobiano de las derivadas parciales de f respecto a x (estado))
-Matriz V (Jacobiano de las derivadas parciales de h respecto a v (error de medición))
-Matriz H (Jacobiano de las derivadas parciales de h respecto a x (estado))
- 
+\begin{itemize}
+\item Vector x (estado en el que se encuentra el sistema)
+\item Matriz P (Error de la covarianza)
+\item Matriz Q (covarianza del ruido en la transición (process))
+\item Matriz R (covarianza del ruido en el censado (measurement))
+\item Matriz W (Jacobiano de las derivadas parciales de f respecto a w (error en el calculo del estado))
+\item Matriz A (Jacobiano de las derivadas parciales de f respecto a x (estado))
+\item Matriz V (Jacobiano de las derivadas parciales de h respecto a v (error de medición))
+\item Matriz H (Jacobiano de las derivadas parciales de h respecto a x (estado))
+\end{itemize}
 Por ultimo K se denomina \textit{ganancia de Kalman} y representa el nivel de ponderación que se le da a la información del censado por sobre la predicción estimada.
 
 En este caso de lo que teníamos en el robot diferencial en el modelo de predicción ahora contamos con más grados de libertad posibles en la translación. Ahora es posible que el robot se mueva tanto en $x$ como en $y$ y $\theta$.
@@ -354,6 +359,8 @@ Para $K=0.4$:
 \end{figure}
 \FloatBarrier
 
+Trayectoria Efectiva:
+
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=\linewidth/2]{imagenesTrayectorias/ekf/ekf04.png}
@@ -378,6 +385,8 @@ Repetimos el experimento para $K=1$:
 \endminipage
 \end{figure}
 \FloatBarrier
+
+Trayectoria Efectiva:
 
 \begin{figure}[!htb]
 \begin{center}
@@ -404,6 +413,8 @@ Finalmente para $K=4$:
 \end{figure}
 \FloatBarrier
 
+Trayectoria Efectiva:
+
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=\linewidth/2]{imagenesTrayectorias/ekf/ekf4.png}
@@ -420,26 +431,6 @@ A diferencia del modelo previo de lazo cerrado Kalman permite estimar de manera 
 
 En conclusión podemos apreciar que aplicando EKF es posible aplicar valores mucho mas restrictivos sobre la velocidad sin perder precisión en los valores odométricos. Si recordamos en el apartado de control a lazo cerrado esto no era posible ya que la acumulación de errores sistemáticos y del modelo cinemático en sí llevaba a estimaciones que no representaban de manera alguna la realidad.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Detalles del sistema desarrollado}
-
-Para concluir el trabajo presentamos un pantallazo general de todos los nodos trabajando en conjunto:
-
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=\linewidth]{rqtgraphekf.png} 
-\end{center}
-\end{figure}
-
-Sobre esta gran cantidad de mensajes siendo intercambiados en paralelo podemos destacar como lo más relevante al problema los siguientes:
-
-El nodo encargado de la odometría recibe la información de los comandos de velocidad t encoders para enviar su estimación de la pose, esta es capturada por el "trajectory follower" que mide la distancia a la pose del goal juntando esto con lo recibido por el "trajectory generator" y publicando las consignas de velocidades necesarias para avanzar hacia el goal.
-
-Por su parte el nodo "localizer" se suscribe a los tópicos de odometría, la información de senado y la ubicación del robot y postes en el simulado, con esto obtiene las consignas de covarianza y publica las transformaciones desde el marco EKF al del robot.
-
-Por último el detector de landmarks de la IMU usa la información usa la información de scanning para actualizar la información de distancia respecto a los "landmarks".
 
 %Utilizando como base los nodos provistos por la catedra hubo que hacer modificaciones sobre los siguientes paquetes:
 %-lazo cerrado: adaptacion del modelo cinemático y control de feedback
