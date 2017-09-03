@@ -18,6 +18,14 @@
 \usepackage{epsf}
 \usepackage{caratula}
 \usepackage{mathtools}
+\usepackage[section]{placeins}
+\usepackage{etoolbox}
+\preto{\subsection}{\clearpageafterfirst}
+\preto{\includegraphics}{\filbreak}
+\newcommand{\clearpageafterfirst}{%
+  \gdef\clearpageafterfirst{\clearpage}%
+}
+
 \begin{document}
 
 \input{caratula.tex}

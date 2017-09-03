@@ -40,37 +40,45 @@ Como ya adelantamos, en este apartado buscaremos ver que tan exacto resulta nues
 
 Como primer experimento enviamos el comando de velocidad $(v_x = 2, v_y=0, w_z=0)$ durante $8$ segundos:
 
+\begin{center}
 \begin{figure}[!htb]
 \includegraphics[width=\linewidth]{pruebasOdom/8segAdelante2.png}
 \end{figure}
-
+\FloatBarrier
+\end{center}
 
 Podemos observar que incluso a altas velocidades el modelo es capaz de predecir con bastante exactitud su posición.
 
 Para el siguiente experimento, enviamos la consigna de velocidad $(v_x = 0, v_y=2, w_z=0)$ durante $8$ segundos.
 
+\begin{center}
 \begin{figure}[!htb]
 \includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda2.png}
 \end{figure}
-
+\FloatBarrier
+\end{center}
 En este caso, podemos ver que la estimación odometrica diverge ampliamente con la provista por el simulador, incluso en vez de realizar una trayectoria recta hacia uno de los costados realiza una elipse. Esto puede deberse principalmente a que los rodillos especiales que le permiten trasladarse en el eje $y$ resbalan o que los actuadores no logran cumplir la consigna deseada. Para el siguiente experimento volvemos a realizar el mismo experimento pero reduciendo la velocidad deseada.
 
 Enviando la consigna $(v_x = 0, v_y=0.5,w_z=0)$ durante 8 segundos: 
 
+\begin{center}
 \begin{figure}[!htb]
 \includegraphics[width=\linewidth]{pruebasOdom/8segIzquierda05.png}
 \end{figure}
-
+\FloatBarrier
+\end{center}
 Podemos ver que para velocidades menores la calidad de las predicciones odométricas son mucho mejores, aún así puede verse que en este eje el error crece mucho mas rápido que en el eje $x$.
 
 \pagebreak
 
 Para finalizar enviamos como consigna $(v_x = 0, v_y=0,w_z=2)$, luego de realizar 3 vueltas sobre su eje, detenemos al robot y visualizamos en RViz:
 
+\begin{center}
 \begin{figure}[!htb]
 \includegraphics[width=\linewidth]{pruebasOdom/3Vueltas2Vel.png}
 \end{figure}
-
+\FloatBarrier
+\end{center}
 Puede verse que el error en este caso tampoco crece de manera desproporcionada incluso exigiéndole altas velocidades.
 
 
@@ -126,13 +134,20 @@ $K = 0.4$
   \includegraphics[width=\linewidth]{imagenesExpLazoCerrado/k0.4/5.png}
 \endminipage
 \end{figure}
+\FloatBarrier
 
 A continuación graficamos la trayectoria obtenida a partir del \textit{loggeo} de poses en el tiempo: 
 
 % insertar grafico 
-% \includegraphics[width=\linewidth]{imagenesTrayectorias/lazocerrado/lazocerrado04.png}
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth/2]{imagenesTrayectorias/lazocerrado/lazocerrado04.png}
+\end{center}
+\end{figure}
+\FloatBarrier
 
 $K = 1$
+
 
 
 \begin{figure}[!htb]
@@ -146,9 +161,16 @@ $K = 1$
   \includegraphics[width=\linewidth]{imagenesExpLazoCerrado/k1/5.png}
 \endminipage
 \end{figure}
+\FloatBarrier
 
 % insertar grafico 
-% \includegraphics[width=\linewidth]{imagenesTrayectorias/lazocerrado/lazocerrado1.png}
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth/2]{imagenesTrayectorias/lazocerrado/lazocerrado1.png}
+\end{center}
+\end{figure}
+\FloatBarrier
+
 
 \pagebreak
 $K = 4$
@@ -165,10 +187,15 @@ $K = 4$
   \includegraphics[width=\linewidth]{imagenesExpLazoCerrado/k4/4.png}
 \endminipage
 \end{figure}
+\FloatBarrier
 
 % insertar grafico 
-% \includegraphics[width=\linewidth]{imagenesTrayectorias/lazocerrado/lazocerrado4.png}
-
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth/2]{imagenesTrayectorias/lazocerrado/lazocerrado4.png}
+\end{center}
+\end{figure}
+\FloatBarrier
 
 En estas imágenes podemos notar que si bien el robot sigue la trayectoria respecto a su posición estimada de manera precisa, la estimación de la posición pierde precisión a medida que aumentamos el valor de K y observamos que para cualquier valor mayor a 1 diverge de la trayectoria esperada muy rápido. Consideramos que esto se debe a que a grandes velocidades, el modelo cinemático acumula error más rápidamente y por eso cada posición va empeorando respecto a la esperada.
 
@@ -191,8 +218,13 @@ El siguiente diagrama expresa el funcionamiento del EKF:
 
 %diagrama EKF en apunte kalman_notes01.pdf  -> KalmanEsquema.png
 % insertar grafico 
-% \includegraphics[width=\linewidth]{KalmanEsquema.png}
 
+\begin{center}
+\begin{figure}[!htb]
+\includegraphics[width=\linewidth]{KalmanEsquema.png}
+\end{figure}
+\FloatBarrier
+\end{center}
 
 Las variables presentes en el modelo son: 
 
@@ -257,24 +289,51 @@ En esta sección buscamos experimentar que tan bueno resulta el modelo EKF con l
 
 Partiendo de un punto en el que el robot se encuentra frente a tres postes, podemos observar que logra estimar su posición con una matriz de covarianza (en azul) casi nula.
 
+\begin{figure}[!htb]
+\begin{center}
 \includegraphics[scale=0.3]{punto4/ekfViendoTodosLosPostes.png}
+\end{center}
+\end{figure}
+\FloatBarrier
+
+\FloatBarrier
 
 Reduciendo la distancia entre los postes y el robot, si este solo percibe dos al mismo tiempo su covarianza continúa siendo casi imperceptible en la imagen.
 
+\begin{figure}[!htb]
+\begin{center}
 \includegraphics[scale=0.3]{punto4/ekfViendoDosPostes.png}
+\end{center}
+\end{figure}
+\FloatBarrier
+
 
 Ahora posicionando el robot para que solo cense un poste, el grado de certeza decae considerablemente. Dado que ahora solo tenemos la referencia al eje $x$ la covarianza en el eje $y$ empieza a aumentar haciendo perceptible el elipsoide violeta ensanchándose sobre ese eje.
 
+\begin{figure}[!htb]
+\begin{center}
 \includegraphics[scale=0.3]{punto4/ekfViendoUnPoste.png}
+\end{center}
+\end{figure}
+\FloatBarrier
 
 Si ahora volvemos a censar dos postes podemos observar como el robot tiene la posibilidad de recuperarse y volver a conseguir una predicción precisa de su posición, la covarianza en el eje $y$ se reduce a valores parecidos a los que teníamos antes.
 
+\begin{figure}[!htb]
+\begin{center}
 \includegraphics[scale=0.3]{punto4/ekfViendoTresPostesOtraVez.png}
+\end{center}
+\end{figure}
+\FloatBarrier
 
 Finalmente, si el robot no es capaz de censar ningún poste, la covarianza tanto en $x$ como en $y$ aumenta.
 
+\begin{figure}[!htb]
+\begin{center}
 \includegraphics[scale=0.3]{punto4/ekfSinVerNingunPoste.png}
-
+\end{center}
+\end{figure}
+\FloatBarrier
 
 \section{Seguimiento de trayectorias a lazo cerrado utilizando localización basada en EKF}
 
@@ -295,9 +354,15 @@ Para $K=0.4$:
   \includegraphics[width=\linewidth]{imagenesEKF/k0.4/3.png}
 \endminipage
 \end{figure}
+\FloatBarrier
 
-% insertar grafico 
-% \includegraphics[width=\linewidth]{imagenesTrayectorias/ekf/ekf04.png}
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth/2]{imagenesTrayectorias/ekf/ekf04.png}
+\end{center}
+\end{figure}
+\FloatBarrier
+
 
 En este caso podemos ver que el base\_link\_ekf permanece casi pegado al ground\_truth durante todo el recorrido. Además contamos con el base\_link (estimación odometrica sin utilizar EKF) para analizar de manera comparativa con los otros dos valores. En este caso en particular, el base\_link no se aparta demasiado de los otros dos valores.
 
@@ -314,9 +379,15 @@ Repetimos el experimento para $K=1$:
   \includegraphics[width=\linewidth]{imagenesEKF/K1/4.png}
 \endminipage
 \end{figure}
+\FloatBarrier
 
-% insertar grafico 
-% \includegraphics[width=\linewidth]{imagenesTrayectorias/ekf/ekf1.png}
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth/2]{imagenesTrayectorias/ekf/ekf1.png}
+\end{center}
+\end{figure}
+\FloatBarrier
+
 
 Si bien el base\_link\_ekf continúa muy cercano al ground\_truth, podemos ver que base\_link ya para este caso diverge hacia un valor incorrecto.
 
@@ -333,9 +404,15 @@ Finalmente para $K=4$:
   \includegraphics[width=\linewidth]{imagenesEKF/k4/3.png}
 \endminipage
 \end{figure}
+\FloatBarrier
 
-% insertar grafico 
-% \includegraphics[width=\linewidth]{imagenesTrayectorias/ekf/ekf4.png}
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\linewidth/2]{imagenesTrayectorias/ekf/ekf4.png}
+\end{center}
+\end{figure}
+\FloatBarrier
+
 
 %Comparativa de trayectorias entre lazo cerrado y lazo cerrado con EKF:
 
