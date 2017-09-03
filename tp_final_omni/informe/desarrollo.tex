@@ -96,6 +96,7 @@ $$V_y = K \Delta_y $$
 $$\theta = K \Delta_w $$
 
 Donde $K$ es una constante proporcional.
+%aca podemos mencionar PID y como esta implementado en este modelo. 
 %el termino proporcional se encarga de ajustar el error inmediato buscando llevar la diferencia en estado estacionando a cero.
 %el termino integral acumula los errores obtenidos hasta ese punto 
 %el termino derivativo utiliza el error para estimar diferencias a futuro
@@ -126,9 +127,10 @@ $K = 0.4$
 \endminipage
 \end{figure}
 
-En el siguiente gráfico podemos ver la trayectoria completa comparando los valores obtenidos con la consigna que habíamos definido:
+A continuación graficamos la trayectoria obtenida a partir del \textit{loggeo} de poses en el tiempo: 
 
-%aca iria el grafico en R con el trayecto obtenido para K=0.4
+% insertar grafico 
+% \includegraphics[width=\linewidth]{imagenesTrayectorias/lazocerrado/lazocerrado04.png}
 
 $K = 1$
 
@@ -145,7 +147,8 @@ $K = 1$
 \endminipage
 \end{figure}
 
-%idem con K=1
+% insertar grafico 
+% \includegraphics[width=\linewidth]{imagenesTrayectorias/lazocerrado/lazocerrado1.png}
 
 \pagebreak
 $K = 4$
@@ -163,7 +166,8 @@ $K = 4$
 \endminipage
 \end{figure}
 
-%idem con K=4
+% insertar grafico 
+% \includegraphics[width=\linewidth]{imagenesTrayectorias/lazocerrado/lazocerrado4.png}
 
 
 En estas imágenes podemos notar que si bien el robot sigue la trayectoria respecto a su posición estimada de manera precisa, la estimación de la posición pierde precisión a medida que aumentamos el valor de K y observamos que para cualquier valor mayor a 1 diverge de la trayectoria esperada muy rápido. Consideramos que esto se debe a que a grandes velocidades, el modelo cinemático acumula error más rápidamente y por eso cada posición va empeorando respecto a la esperada.
@@ -186,8 +190,9 @@ $z_k = h(x_{k-1},v_{k-1}) + v_k$   (Estado del censado a partir de una función 
 El siguiente diagrama expresa el funcionamiento del EKF:
 
 %diagrama EKF en apunte kalman_notes01.pdf  -> KalmanEsquema.png
+% insertar grafico 
+% \includegraphics[width=\linewidth]{KalmanEsquema.png}
 
-%\includegraphics - KalmanEsquema.png
 
 Las variables presentes en el modelo son: 
 
@@ -241,7 +246,10 @@ $$W$$
 
 El modelo de censado $h(\overrightarrow{x},\overrightarrow{v})$ y las mediciones $z$ al no depender del tipo de movimiento que el robot omnidireccional ejerce no cambian, así que permanecen con los valores definidos por defecto iguales a los del modelo diferencial. De la misma forma la matriz Jacobiana H tampoco presenta cambios.
 
-%TODO: Hablar sobre la experimentación que pide sobre modificar la covarianza inicial. Sobre esto lo unico que hay para mencionar (abajo) es que se experimento con distintos niveles de covarianza inicial tanto para sensado como para movimiento pero en ambos casos el valor se estabiliza en pocas iteraciones.
+%TODO: Hablar sobre la experimentación que pide sobre modificar la covarianza inicial. Sobre esto lo unico que hay para mencionar es que se experimento con distintos niveles de covarianza inicial tanto para sensado como para movimiento pero en ambos casos el valor se estabiliza en pocas iteraciones.
+
+%Algo así:
+%"Considerando estas variables de control se experimento variando las matrices de incertidumbre inical tanto para el modelo de sensado como para el de movimiento, no hay desarrollo sobre esto en la seccion de Experimentacion (se presenta a continuacion) ya que no se encontraron resultados interesantes, el nivel de convergencia es bastante alto y con pocas iteraciones Kalman converge a partir de los datos del entorno"
 
 \subsubsection{Experimentación}
 
@@ -288,6 +296,9 @@ Para $K=0.4$:
 \endminipage
 \end{figure}
 
+% insertar grafico 
+% \includegraphics[width=\linewidth]{imagenesTrayectorias/ekf/ekf04.png}
+
 En este caso podemos ver que el base\_link\_ekf permanece casi pegado al ground\_truth durante todo el recorrido. Además contamos con el base\_link (estimación odometrica sin utilizar EKF) para analizar de manera comparativa con los otros dos valores. En este caso en particular, el base\_link no se aparta demasiado de los otros dos valores.
 
 Repetimos el experimento para $K=1$:
@@ -303,6 +314,9 @@ Repetimos el experimento para $K=1$:
   \includegraphics[width=\linewidth]{imagenesEKF/K1/4.png}
 \endminipage
 \end{figure}
+
+% insertar grafico 
+% \includegraphics[width=\linewidth]{imagenesTrayectorias/ekf/ekf1.png}
 
 Si bien el base\_link\_ekf continúa muy cercano al ground\_truth, podemos ver que base\_link ya para este caso diverge hacia un valor incorrecto.
 
@@ -320,11 +334,14 @@ Finalmente para $K=4$:
 \endminipage
 \end{figure}
 
+% insertar grafico 
+% \includegraphics[width=\linewidth]{imagenesTrayectorias/ekf/ekf4.png}
+
 %Comparativa de trayectorias entre lazo cerrado y lazo cerrado con EKF:
 
 %concluciones: EKF te permite darle mucho mas velocidad sin perder precición, en cambio con lazo cerrado, si aumentas mucho la cte,
 
-Podemos ver que base\_link\_ekf aún para velocidades tan restrictivas permite estimar de manera muy precisa la pose real del robot, no así el base\_link que ya para este caso diverge a cualquier valor.
+A diferencia del modelo previo de lazo cerrado Kalman permite estimar de manera muy precisa la pose real del robot aún para velocidades tan restrictivas.
 
 En conclusión podemos apreciar que aplicando EKF es posible aplicar valores mucho mas restrictivos sobre la velocidad sin perder precisión en los valores odométricos. Si recordamos en el apartado de control a lazo cerrado esto no era posible ya que la acumulación de errores sistemáticos y del modelo cinemático en sí llevaba a estimaciones que no representaban de manera alguna la realidad.
 
