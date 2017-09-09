@@ -88,8 +88,8 @@ void build_sin_trajectory(double stepping, double total_time, double amplitude, 
       va = -(M_PI/2)/total_time;
       
       // derivadas segundas
-      double vvx = 0;
-      double vvy = 0;
+      // double vvx = 0;
+      // double vvy = 0;
       
       /* dado que la funcion esta construida pensada con Y "hacia arriba", X "hacia derecha" 
       * y la orientacion inicial puede no ser 0 -> entonces aplicamos una rotacion de manera de 
