@@ -97,7 +97,7 @@ $$\Delta_x = x_f - x_i / (t_f - t_i)$$
 $$\Delta_y = y_f - y_i / (t_f - t_i)$$
 $$\Delta_w = w_f - w_i / (t_f - t_i)$$
 
-Donde $\Delta_x$, $\Delta_y$ y $\Delta_w$ es el "error" entre la pose actual y la objetivo. Minimizar este error significará haber alcanzado la pose objetivo, por lo que definimos las velocidades del robot como:
+Donde $\Delta_x$, $\Delta_y$ y $\Delta_w$ es la diferencia entre la pose actual y la objetivo. Minimizar esto significará haber alcanzado la pose objetivo, por lo que definimos las velocidades del robot como:
 
 $$V_x = K \Delta_x $$
 $$V_y = K \Delta_y $$
@@ -136,7 +136,7 @@ $K = 0.4$
 \end{figure}
 \FloatBarrier
 
-Como otra metodología de visualización, logeamos las poses provenientes del graund truth provistas por roscore y los graficamos de la siguiente manera:
+Como otra metodología de visualización, logeamos las poses provenientes del ground truth provistas por roscore y los graficamos de la siguiente manera:
 
 % insertar grafico 
 \begin{figure}[!htb]
